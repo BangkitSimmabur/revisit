@@ -7,7 +7,6 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:revisit/components/button_common.dart';
 import 'package:revisit/components/text_choose.dart';
-import 'package:revisit/service/handling_server_log.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/service/navigation_service.dart';
 
