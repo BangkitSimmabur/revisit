@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 
 class Constant{
@@ -23,6 +24,34 @@ class Constant{
 
   //color
   static final Color blue01 = Color(0xff3D5AFE);
+  static final Color red01 = Colors.red.shade500;
+  static final Color red025 = Colors.redAccent.shade200;
+  static final Color pink01 = Color(0xffff4081);
+  static final Color green01 = Colors.green.shade300;
+  static final Color green02 = Colors.green.shade700;
+  static final Color BLUE05 = Colors.blue.shade800;
+  static final Color BLUE02 = Colors.blue.shade400;
+  static final Color BLUE03 = Color(0xff0080ff);
+  static final Color BLUE025 = Colors.blue.shade200;
+  static final Color GRAY01 = Colors.grey.shade700;
+  static final Color GRAY02 = Colors.grey.shade300;
+  static final Color GRAY_TEXT = Color(0xff595959);
+  static final Color GRAY_TEXT2 = Color(0xffa7a8aa);
+  static final Color GRAY_TEXT3 = Color(0xffacabab);
+  static final Color GRAY_BACKGROUND = Color(0xfff4f2f2);
+  static final Color GRAY_BACKGROUND_2 = Color(0xfff9f9f9);
+  static final Color GRAY_BACKGROUND_3 = Color(0xfff8f6f7);
+  static final Color GRAY_BACKGROUND_4 = Color(0xffedf0f2);
+  static final Color GRAY_BACKGROUND_5 = Color(0xffdfe7f0);
+  static final Color GRAY_BACKGROUND_6 = Color(0xffe8ebed);
+  static final Color GRAY_BACKGROUND_7 = Color(0xfff8f6f6);
+  static final Color GRAY_BORDER = Color(0xffdadada);
+  static final Color GRAY_Underline = Color(0xffefefef);
+  static final Color GRAY025 = Colors.grey.shade100;
+  static final Color YELLOW01 = Colors.yellow.shade600;
+  static const Color YELLOW02 = Color(0xfffce712);
+  static final Color BG_OPACITY = Colors.black.withOpacity(0.15);
+  static final Color INACTIVE_TEXT = Color(0xffc2c2c2);
 
   // SPACING
   static double MINIMUM_SPACING = Platform.isIOS ? 8.0 : 5.0;
@@ -59,7 +88,6 @@ class Constant{
   static const double HEIGHT_SM = 30.0;
   static const double HEIGHT_XXSM = 3.2;
 
-  //padding
   // PADDING
   static const double DEFAULT_PADDING_MD = 50;
   static const double DEFAULT_PADDING_SM = 20;
@@ -104,5 +132,22 @@ class Constant{
 
   static TextStyle inputCommon = TextStyle(color: Colors.grey, fontSize: Constant.MINIMUM_FONT_SIZE);
 
+  static DateTime FIRST_DATE = DateTime(1960, 1, 1);
+  static DateTime LAST_DATE = DateTime(2100, 1, 1);
 
+  //duration
+  static const String CURR_POSITION_ID = 'CURR_TRUWORLD_POSITION';
+  static const double DEFAULT_ZOOM_MAP = 14.0;
+  static const double DEFAULT_OPACITY_CUPERTINO_BUTTON = 0.4;
+  static const Map<String, Duration> DEFAULT_DURATION_SNACKBAR = {
+    "duration": Duration(seconds: 5),
+    "animationDuration": Duration(milliseconds: 200),
+  };
+  static const FAST_DURATION = Duration(milliseconds: 100);
+  static Position INIT_LOCATION = Position(
+    latitude: 1.1848958,
+    longitude: 104.1117605,
+  );
+  static const String ID_LOCATION_NOW = 'Your Location';
+  static const DIGITS = [0, 1, 2, 3, 4, 6, 7, 8, 9];
 }
