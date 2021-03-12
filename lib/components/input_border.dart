@@ -23,25 +23,25 @@ class RevisitInputBorder extends StatefulWidget {
   final Color backGroundColor;
 
   RevisitInputBorder(
-      this.labelText, {
-        this.inputController,
-        this.disableEmptyInput = false,
-        this.obscureText = false,
-        this.keyboardType = TextInputType.text,
-        this.icon = const Icon(Icons.email),
-        this.borderSide,
-        this.labelSize = Constant.MINIMUM_FONT_SIZE,
-        this.labelColor = Colors.black54,
-        this.labelWeight = FontWeight.w500,
-        this.noPadding = false,
-        this.autoValidate = false,
-        this.onValidate,
-        this.errorMaxLines = 1,
-        this.errorColor,
-        this.borderRadius = Constant.MINIMUM_BORDER_RADIUS_LG,
-        this.isDense =  true,
-        this.backGroundColor = Colors.transparent,
-      });
+    this.labelText, {
+    this.inputController,
+    this.disableEmptyInput = false,
+    this.obscureText = false,
+    this.keyboardType = TextInputType.text,
+    this.icon,
+    this.borderSide,
+    this.labelSize = Constant.MINIMUM_FONT_SIZE,
+    this.labelColor = Colors.black54,
+    this.labelWeight = FontWeight.w500,
+    this.noPadding = false,
+    this.autoValidate = false,
+    this.onValidate,
+    this.errorMaxLines = 1,
+    this.errorColor,
+    this.borderRadius = Constant.MINIMUM_BORDER_RADIUS_LG,
+    this.isDense = true,
+    this.backGroundColor = Colors.transparent,
+  });
 
   @override
   State<StatefulWidget> createState() => _RevisitInputBorderState();
@@ -63,7 +63,7 @@ class _RevisitInputBorderState extends State<RevisitInputBorder> {
 
   @override
   void didChangeDependencies() {
-    _labelText =  widget.labelText;
+    _labelText = widget.labelText;
     super.didChangeDependencies();
   }
 
@@ -85,9 +85,9 @@ class _RevisitInputBorderState extends State<RevisitInputBorder> {
       padding: widget.noPadding
           ? EdgeInsets.all(0.0)
           : EdgeInsets.only(
-        left: Constant.MINIMUM_PADDING / 3,
-        right: Constant.MINIMUM_PADDING / 3,
-      ),
+              left: Constant.MINIMUM_PADDING / 3,
+              right: Constant.MINIMUM_PADDING / 3,
+            ),
       child: Material(
         color: Colors.transparent,
         child: TextFormField(
@@ -102,7 +102,7 @@ class _RevisitInputBorderState extends State<RevisitInputBorder> {
             isDense: true,
             fillColor: widget.backGroundColor,
             filled: widget.backGroundColor != null ? true : false,
-            contentPadding: EdgeInsets.only( bottom: 6),
+            // contentPadding: EdgeInsets.only( bottom: 6),
 //            border: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: _borderSide,

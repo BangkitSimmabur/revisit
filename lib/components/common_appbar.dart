@@ -15,6 +15,7 @@ class AuthAppbar extends StatelessWidget implements PreferredSizeWidget {
   final IconData customLeadingActionIconData;
   final Function onPressLeading;
   final bool mustPop;
+  final Color bgColor;
 
   final Color trailingColor;
 
@@ -32,6 +33,7 @@ class AuthAppbar extends StatelessWidget implements PreferredSizeWidget {
         this.customLeadingActionIconData,
         this.onPressLeading,
         this.mustPop = false,
+        this.bgColor = Colors.white,
       })  : preferredSize = Size.fromHeight(56.0),
         super(key: key);
 
@@ -46,7 +48,7 @@ class AuthAppbar extends StatelessWidget implements PreferredSizeWidget {
         ? IconButton(
       icon: Icon(
         customLeadingIconData,
-        color: Constant.GRAY_TEXT,
+        color: Colors.white,
       ),
       onPressed: _onBackChange(context),
     )
@@ -64,7 +66,7 @@ class AuthAppbar extends StatelessWidget implements PreferredSizeWidget {
         overflow: TextOverflow.ellipsis,
       ),
       brightness: Brightness.light,
-      backgroundColor: Colors.white,
+      backgroundColor: bgColor,
       actions: <Widget>[
         _trailingIcon,
         _actionIcon,
