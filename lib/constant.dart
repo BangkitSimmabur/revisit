@@ -88,6 +88,9 @@ class Constant{
   static const double HEIGHT_SM = 30.0;
   static const double HEIGHT_XXSM = 3.2;
 
+  static const double INPUT_HEIGHT = 50;
+  static const double INPUT_HEIGHT_BUTTON = 40;
+
   // PADDING
   static const double DEFAULT_PADDING_MD = 50;
   static const double DEFAULT_PADDING_SM = 20;

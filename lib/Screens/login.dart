@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:revisit/Screens/register.dart';
 import 'package:revisit/components/button_full_border.dart';
 import 'package:revisit/components/input_border.dart';
-import 'package:revisit/components/revisit_bg_inage.dart';
+import 'package:revisit/components/revisit_bg_image.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/platform/platform_main.dart';
 import 'package:revisit/service/location_service.dart';

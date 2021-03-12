@@ -35,6 +35,8 @@ dependencies:
   flutter_spinkit: ^4.1.2+1
   json_annotation: ^2.4.0
   image_picker: ^0.6.7
+  pull_to_refresh: 1.6.3
+  sqflite: ^1.1.6+2
   flushbar:
     git:
       url: git://github.com/valterh4ck3r/flushbar
@@ -64,6 +66,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

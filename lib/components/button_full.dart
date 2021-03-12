@@ -18,7 +18,6 @@ class RevisitButtonFull extends StatefulWidget {
   final bool active;
   final int maxLines;
   final double height;
-
   BorderSide btnBorderSide;
   Border btnBorder;
   final Color buttonDisabledColor;
