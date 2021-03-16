@@ -8,6 +8,8 @@ import 'package:revisit/components/button_full_border.dart';
 import 'package:revisit/components/common_appbar.dart';
 import 'package:revisit/components/input_border.dart';
 import 'package:revisit/platform/platform_main.dart';
+import 'package:revisit/service/auth_service.dart';
+import 'package:revisit/service/handling_server_log.dart';
 import 'package:revisit/service/location_service.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/service/navigation_service.dart';
@@ -19,13 +21,16 @@ class Register extends StatefulWidget {
   }
 }
 
-class _RegisterState extends State<Register> with SingleTickerProviderStateMixin {
+class _RegisterState extends State<Register>
+    with SingleTickerProviderStateMixin {
   Widget childElement;
   TabController _tabController;
   var _locatorModel = GetIt.I<NavigationService>();
   var _navigatorKey = GlobalKey<NavigatorState>();
   GlobalKey<FormState> _signUpKey = GlobalKey<FormState>();
   var _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  AuthService _authService;
 
   // GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
@@ -83,7 +88,7 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     _locationService = Provider.of<LocationService>(context);
-
+    _authService = Provider.of<AuthService>(context);
 
     return Container(
       child: Stack(
@@ -135,13 +140,12 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
                 labelColor: Constant.blue01,
                 labelSize: Constant.MINIMUM_FONT_SIZE,
                 labelWeight: FontWeight.w600,
-                keyboardType: TextInputType.emailAddress,
                 borderSide: BorderSide(
                   color: Constant.blue01,
                   width: Constant.MINIMUM_BORDER_WIDTH,
                 ),
                 noPadding: true,
-                inputController: _emailController,
+                inputController: _nameController,
                 borderRadius: 0,
                 isDense: false,
               ),
@@ -153,15 +157,17 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
                 labelColor: Constant.blue01,
                 labelSize: Constant.MINIMUM_FONT_SIZE,
                 labelWeight: FontWeight.w600,
-                keyboardType: TextInputType.emailAddress,
                 borderSide: BorderSide(
                   color: Constant.blue01,
                   width: Constant.MINIMUM_BORDER_WIDTH,
                 ),
                 noPadding: true,
-                inputController: _emailController,
+                inputController: _usernameController,
                 borderRadius: 0,
                 isDense: false,
+              ),
+              Container(
+                height: Constant.MINIMUM_SPACING_XLG,
               ),
               RevisitInputBorder(
                 'email',
@@ -212,9 +218,10 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
                       borderRadius: Constant.MINIMUM_BORDER_RADIUS_LG,
                       onClick: () {
                         print('ditekan');
+                        onRegister();
                       },
                       btnBorderSide:
-                      BorderSide(width: 2, color: Constant.blue01),
+                          BorderSide(width: 2, color: Constant.blue01),
                       buttonColor: Constant.blue01,
                     ),
                   ),
@@ -225,6 +232,22 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
         ),
       ],
     );
+  }
+
+  void onRegister() async {
+    HandlingServerLog a = await _authService.register(
+      _nameController.text,
+      _passwordController.text,
+      _emailController.text,
+      _usernameController.text,
+    );
+    print(a.data);
+    if (a.success) {
+      MainPlatform.backTransitionPage(context);
+    }
+    if (!a.success) {
+      MainPlatform.showErrorSnackbar(context, 'Gagal mendaftarkan akun');
+    }
   }
 
   Widget get _appBar {

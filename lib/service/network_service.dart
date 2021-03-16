@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:revisit/service/constant_service.dart';
+import 'package:revisit/service/handling_server_log.dart';
+import 'dart:convert';
 
 class NetworkService with ChangeNotifier {
+  ConstantService constantService;
 
-  String _token;
+  NetworkService(this.constantService);
 
-  Future<dynamic> doHttpGet(url) async {
+  Future<HandlingServerLog> doHttpGet(url) async {
     String reqUrl = "https://revisit-backend.herokuapp.com/api/$url";
 
-    Map<String,dynamic> header;
+    var header;
 
-    if (_token != null) {
+    if (constantService.token != null) {
       header = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer $_token",
+        "Authorization": "Bearer ${constantService.token}",
       };
     } else {
       header = {
@@ -25,24 +29,32 @@ class NetworkService with ChangeNotifier {
 
     http.Response response = await http.get(reqUrl, headers: header);
 
-    if (response.statusCode == 200) {
+    var resBody = json.decode(response.body);
 
-      return response;
+    if (resBody['check'] == true) {
+      return HandlingServerLog.success(resBody['check'], resBody['results']);
     } else {
-      print(response.statusCode);
+      return HandlingServerLog.failed(resBody['check'], resBody['caption']);
     }
   }
 
-  Future<dynamic> doHttpPost(url, body) async {
+  Future<HandlingServerLog> doHttpPost(
+    String url,
+    reqBody,
+  ) async {
     String reqUrl = "https://revisit-backend.herokuapp.com/api/$url";
 
-    Map<String,dynamic> header;
+    var requestBody = json.encode(reqBody);
 
-    if (_token != null) {
+    print(requestBody);
+    print(reqBody);
+    var header;
+
+    if (constantService.token != null) {
       header = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer $_token",
+        "Authorization": "Bearer ${constantService.token}",
       };
     } else {
       header = {
@@ -51,13 +63,15 @@ class NetworkService with ChangeNotifier {
       };
     }
 
-    http.Response response = await http.get(reqUrl, headers: header);
+    http.Response response =
+        await http.post(reqUrl, body: requestBody, headers: header);
 
-    if (response.statusCode == 200) {
+    var resBody = json.decode(response.body);
 
-      return response;
+    if (resBody['check'] == true) {
+      return HandlingServerLog.success(resBody['check'], resBody['results']);
     } else {
-      print(response.statusCode);
+      return HandlingServerLog.failed(resBody['check'], resBody['caption']);
     }
   }
 }

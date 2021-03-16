@@ -15,10 +15,13 @@ import 'package:revisit/components/button_full.dart';
 import 'package:revisit/components/inputCommon.dart';
 import 'package:revisit/components/revisit_spinner.dart';
 import 'package:revisit/constant.dart';
+import 'package:revisit/service/auth_service.dart';
+import 'package:revisit/service/constant_service.dart';
 import 'package:revisit/service/location_service.dart';
 import 'package:revisit/service/navigation_service.dart';
 import 'package:revisit/type.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:revisit/service/network_service.dart';
 
 void main() {
   setupLocator();
@@ -49,7 +52,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     super.initState();
@@ -60,8 +62,17 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
+          ChangeNotifierProvider<ConstantService>(
+            create: (_) => ConstantService(),
+          ),
           ChangeNotifierProvider<LocationService>(
             create: (_) => LocationService(),
+          ),
+          ChangeNotifierProvider<NetworkService>(
+            create: (_) => NetworkService(ConstantService()),
+          ),
+          ChangeNotifierProvider<AuthService>(
+            create: (_) => AuthService(ConstantService()),
           ),
         ],
         child: RefreshConfiguration(

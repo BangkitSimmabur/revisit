@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:revisit/Screens/register.dart';
 import 'package:revisit/components/button_full_border.dart';
 import 'package:revisit/components/input_border.dart';
 import 'package:revisit/components/revisit_bg_image.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/platform/platform_main.dart';
+import 'package:revisit/service/auth_service.dart';
 import 'package:revisit/service/location_service.dart';
 import 'package:revisit/service/navigation_service.dart';
 
@@ -21,6 +23,7 @@ class _LoginState extends State<Login> {
   final _navigatorKey = GlobalKey<NavigatorState>();
   var _locatorModel = GetIt.I<NavigationService>();
   bool _isLoginLoading = false;
+  AuthService _authService;
 
   LocationService _locationService;
 
@@ -44,6 +47,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    _authService = Provider.of<AuthService>(context);
+
     return Container(
       child: Stack(
         fit: StackFit.expand,
@@ -204,6 +209,7 @@ class _LoginState extends State<Login> {
                         borderRadius: Constant.MINIMUM_BORDER_RADIUS_LG,
                         onClick: () {
                           print('ditekan');
+                          _onLogin();
                         },
                         btnBorderSide:
                             BorderSide(width: 2, color: Constant.blue01),
@@ -217,6 +223,11 @@ class _LoginState extends State<Login> {
         ),
       ],
     );
+  }
+
+  void _onLogin() async {
+    var a = await _authService.login(_emailController.text, _passwordController.text);
+    print('ini balasan: $a');
   }
 
   void _onNavigateRegister() {
