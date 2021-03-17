@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:revisit/Screens/register.dart';
+import 'package:revisit/Screens/tabs/main_tab.dart';
 import 'package:revisit/components/button_full_border.dart';
 import 'package:revisit/components/input_border.dart';
 import 'package:revisit/components/revisit_bg_image.dart';
+import 'package:revisit/components/revisit_checkbox.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/platform/platform_main.dart';
 import 'package:revisit/service/auth_service.dart';
+import 'package:revisit/service/handling_server_log.dart';
 import 'package:revisit/service/location_service.dart';
 import 'package:revisit/service/navigation_service.dart';
 
@@ -24,6 +27,7 @@ class _LoginState extends State<Login> {
   var _locatorModel = GetIt.I<NavigationService>();
   bool _isLoginLoading = false;
   AuthService _authService;
+  bool _isRememberMeChecked = true;
 
   LocationService _locationService;
 
@@ -112,125 +116,158 @@ class _LoginState extends State<Login> {
   }
 
   Widget get _formElement {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-            left: Constant.DEFAULT_PADDING_MD,
-            right: Constant.DEFAULT_PADDING_MD,
-            top: Constant.MINIMUM_SPACING_XLG,
+    return Padding(
+      padding: EdgeInsets.only(
+        left: Constant.DEFAULT_PADDING_MD,
+        right: Constant.DEFAULT_PADDING_MD,
+        top: Constant.MINIMUM_SPACING_XLG,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            height: Constant.INPUT_HEIGHT + 2,
+            child: RevisitInputBorder(
+              'email',
+              labelColor: Colors.white,
+              labelSize: Constant.MINIMUM_FONT_SIZE,
+              labelWeight: FontWeight.w600,
+              keyboardType: TextInputType.emailAddress,
+              icon: Icon(
+                Icons.perm_identity,
+                color: Colors.white,
+                size: Constant.MINIMUM_FONT_SIZE,
+              ),
+              backGroundColor: Color(0x54000000),
+              borderSide: BorderSide(
+                color: Constant.blue01,
+                width: Constant.MINIMUM_BORDER_WIDTH,
+              ),
+              noPadding: true,
+              inputController: _emailController,
+              borderRadius: 5,
+            ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                height: Constant.INPUT_HEIGHT + 2,
-                child: RevisitInputBorder(
-                  'email',
-                  labelColor: Colors.white,
-                  labelSize: Constant.MINIMUM_FONT_SIZE,
-                  labelWeight: FontWeight.w600,
-                  keyboardType: TextInputType.emailAddress,
-                  icon: Icon(
-                    Icons.perm_identity,
-                    color: Colors.white,
-                    size: Constant.MINIMUM_FONT_SIZE,
-                  ),
-                  backGroundColor: Color(0x54000000),
-                  borderSide: BorderSide(
-                    color: Constant.blue01,
-                    width: Constant.MINIMUM_BORDER_WIDTH,
-                  ),
-                  noPadding: true,
-                  inputController: _emailController,
-                  borderRadius: 5,
+          Container(
+            height: Constant.MINIMUM_SPACING_XLG,
+          ),
+          Container(
+            height: Constant.INPUT_HEIGHT + 2,
+            child: RevisitInputBorder(
+              'password',
+              labelColor: Colors.white,
+              labelWeight: FontWeight.w600,
+              obscureText: true,
+              labelSize: Constant.MINIMUM_FONT_SIZE,
+              icon: Icon(
+                Icons.lock,
+                color: Colors.white,
+              ),
+              borderSide: BorderSide(
+                color: Constant.blue01,
+                width: Constant.MINIMUM_BORDER_WIDTH,
+              ),
+              noPadding: true,
+              backGroundColor: Color(0x54000000),
+              inputController: _passwordController,
+              borderRadius: 5,
+            ),
+          ),
+          Container(
+            height: Constant.MINIMUM_SPACING_XLG,
+          ),
+          Row(
+            children: [
+              Flexible(
+                flex: 1,
+                child: Container(
+                  height: Constant.INPUT_HEIGHT_BUTTON + 2,
+                  child: RevisitButtonFullBordered('Daftar',
+                      labelColor: Colors.white,
+                      labelSize: Constant.MINIMUM_FONT_SIZE,
+                      labelWeight: FontWeight.w600,
+                      buttonColor: Color(0x54000000),
+                      // buttonDisabledColor: Constant.GRAY02,
+                      borderRadius: Constant.MINIMUM_BORDER_RADIUS_LG,
+                      onClick: _onNavigateRegister,
+                      isLoading: _isLoginLoading,
+                      btnBorderSide:
+                          BorderSide(width: 2, color: Constant.blue01)),
                 ),
               ),
               Container(
-                height: Constant.MINIMUM_SPACING_XLG,
+                width: Constant.MINIMUM_SPACING_XLG,
               ),
-              Container(
-                height: Constant.INPUT_HEIGHT + 2,
-                child: RevisitInputBorder(
-                  'password',
-                  labelColor: Colors.white,
-                  labelWeight: FontWeight.w600,
-                  obscureText: true,
-                  labelSize: Constant.MINIMUM_FONT_SIZE,
-                  icon: Icon(
-                    Icons.lock,
-                    color: Colors.white,
+              Flexible(
+                flex: 1,
+                child: Container(
+                  height: Constant.INPUT_HEIGHT_BUTTON + 2,
+                  child: RevisitButtonFullBordered(
+                    'Masuk',
+                    labelColor: Colors.white,
+                    labelSize: Constant.MINIMUM_FONT_SIZE,
+                    labelWeight: FontWeight.w600,
+                    buttonColor: Color(0x54000000),
+                    borderRadius: Constant.MINIMUM_BORDER_RADIUS_LG,
+                    onClick: () {
+                      print('ditekan');
+                      _onLogin();
+                    },
+                    btnBorderSide:
+                        BorderSide(width: 2, color: Constant.blue01),
                   ),
-                  borderSide: BorderSide(
-                    color: Constant.blue01,
-                    width: Constant.MINIMUM_BORDER_WIDTH,
-                  ),
-                  noPadding: true,
-                  backGroundColor: Color(0x54000000),
-                  inputController: _passwordController,
-                  borderRadius: 5,
                 ),
               ),
-              Container(
-                height: Constant.MINIMUM_SPACING_XLG,
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      height: Constant.INPUT_HEIGHT_BUTTON + 2,
-                      child: RevisitButtonFullBordered('Daftar',
-                          labelColor: Colors.white,
-                          labelSize: Constant.MINIMUM_FONT_SIZE,
-                          labelWeight: FontWeight.w600,
-                          buttonColor: Color(0x54000000),
-                          // buttonDisabledColor: Constant.GRAY02,
-                          borderRadius: Constant.MINIMUM_BORDER_RADIUS_LG,
-                          onClick: _onNavigateRegister,
-                          isLoading: _isLoginLoading,
-                          btnBorderSide:
-                              BorderSide(width: 2, color: Constant.blue01)),
-                    ),
-                  ),
-                  Container(
-                    width: Constant.MINIMUM_SPACING_XLG,
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      height: Constant.INPUT_HEIGHT_BUTTON + 2,
-                      child: RevisitButtonFullBordered(
-                        'Masuk',
-                        labelColor: Colors.white,
-                        labelSize: Constant.MINIMUM_FONT_SIZE,
-                        labelWeight: FontWeight.w600,
-                        buttonColor: Color(0x54000000),
-                        borderRadius: Constant.MINIMUM_BORDER_RADIUS_LG,
-                        onClick: () {
-                          print('ditekan');
-                          _onLogin();
-                        },
-                        btnBorderSide:
-                            BorderSide(width: 2, color: Constant.blue01),
-                      ),
-                    ),
-                  ),
-                ],
-              )
             ],
           ),
-        ),
-      ],
+          Container(
+            height: Constant.MINIMUM_SPACING_MD,
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Flexible(child: _rememberCheckbox),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   void _onLogin() async {
-    var a = await _authService.login(_emailController.text, _passwordController.text);
-    print('ini balasan: $a');
+    HandlingServerLog serverLog = await _authService.login(
+      _emailController.text,
+      _passwordController.text,
+      _isRememberMeChecked,
+    );
+    if (serverLog.success == true) {
+      MainPlatform.transitionToPage(context, MainTab(), newPage: true);
+    } else {
+      MainPlatform.showErrorSnackbar(context, "Gagal login");
+    }
   }
 
   void _onNavigateRegister() {
     return MainPlatform.transitionToPage(context, Register());
+  }
+
+  Widget get _rememberCheckbox {
+    return RevisitCheckbox(
+      'Ingat Saya',
+      isChecked: _isRememberMeChecked,
+      onChecked: _tickTheRememberMe,
+      labelColor: Constant.BLUE03,
+      buttonColor: Constant.BLUE03,
+      labelWeight: FontWeight.w600,
+      labelSize: Constant.MINIMUM_FONT_SIZE_XS - 2,
+      checkboxPosition: ItemPosition.right,
+    );
+  }
+
+  void _tickTheRememberMe(bool isChecked) {
+    setState(() {
+      this._isRememberMeChecked = !this._isRememberMeChecked;
+    });
   }
 }

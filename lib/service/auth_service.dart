@@ -1,6 +1,9 @@
+import 'package:get_it/get_it.dart';
 import 'package:revisit/service/constant_service.dart';
 import 'package:revisit/service/handling_server_log.dart';
 import 'package:revisit/service/network_service.dart';
+import 'package:revisit/db_helper/table_user.dart';
+import 'package:revisit/service/navigation_service.dart';
 
 class AuthService extends NetworkService {
   AuthService(ConstantService constantService) : super(constantService);
@@ -8,18 +11,18 @@ class AuthService extends NetworkService {
   Future<HandlingServerLog> login(
     String identity,
     String password,
+    bool isRememberMe,
   ) async {
     Map<String, String> reqBody = {"username": identity, "password": password};
-    HandlingServerLog a = await doHttpPost('user/login', reqBody);
-    var newToken = a.data.toString();
+    HandlingServerLog serverLog = await doHttpPost('user/login', reqBody);
+    var newToken = serverLog.data.toString();
 
-    print(a.data);
-    print(newToken);
-
-    print('token ^');
     constantService.token = newToken;
     print(constantService.token);
-    return a;
+    if (isRememberMe) {
+      updateLatestToken();
+    }
+    return serverLog;
   }
 
   Future<HandlingServerLog> register(
@@ -40,5 +43,60 @@ class AuthService extends NetworkService {
     print(a.data);
 
     return a;
+  }
+
+  Future<bool> checkIfLoggedIn() async {
+    var tokenUsed = constantService.token;
+    if (constantService.token == null || constantService.token.length == 0) {
+      var tokenJson =
+          await constantService.dbHelper.getFirst(TableUser.tokenTableName);
+
+      if (tokenJson == null) return false;
+
+      tokenUsed = tokenJson['Token'];
+      notifyListeners();
+    }
+
+    // await getMe(tokenUsed);
+    // if (currentUser == null) {
+    //   _setupUser();
+    //
+    //   return false;
+    // }
+
+    constantService.initClient();
+    _setupUser();
+
+    return true;
+  }
+
+  void _setupUser() {
+    var locator = GetIt.I<NavigationService>();
+    // locator.currentUser = currentUser;
+    locator.currentToken = constantService.token;
+  }
+
+  void updateLatestToken() async {
+    if (constantService.token == null) {
+      return;
+    }
+
+    var tokenFromInMemory = await constantService.dbHelper.getFirst(
+      TableUser.tokenTableName,
+    );
+
+    if (tokenFromInMemory == null) {
+      await constantService.dbHelper.insert(TableUser.tokenTableName, {
+        "Token": constantService.token,
+      });
+
+      return;
+    }
+
+    tokenFromInMemory['Token'] = constantService.token;
+    await constantService.dbHelper.update(
+      TableUser.tokenTableName,
+      tokenFromInMemory,
+    );
   }
 }

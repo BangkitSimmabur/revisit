@@ -11,6 +11,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:revisit/Screens/login.dart';
+import 'package:revisit/Screens/splashScreen.dart';
 import 'package:revisit/components/button_full.dart';
 import 'package:revisit/components/inputCommon.dart';
 import 'package:revisit/components/revisit_spinner.dart';
@@ -138,7 +139,7 @@ class _MyAppState extends State<MyApp> {
   Map get _routeMap {
     return {
       '/': (dynamic data) => MaterialPageRoute(
-            builder: (context) => Login(),
+            builder: (context) => SplashScreen(),
             // builder: (context) => _homeActive,
           ),
       '/landing-home': (dynamic data) => MaterialPageRoute(
