@@ -11,7 +11,7 @@ class CommonText {
       );
 }
 
-class TruWorldTextChoose extends StatefulWidget {
+class RevisitTextChoose extends StatefulWidget {
   final String _defaultText;
   final List<CommonText> commonText;
   final String initValue;
@@ -27,7 +27,7 @@ class TruWorldTextChoose extends StatefulWidget {
   final bool noLabel;
   final bool bordered;
 
-  TruWorldTextChoose(
+  RevisitTextChoose(
       this._defaultText, {
         Key key,
         @required this.commonText,
@@ -46,10 +46,10 @@ class TruWorldTextChoose extends StatefulWidget {
       ) : super(key: key);
 
   @override
-  _TruWorldTextChooseState createState() => _TruWorldTextChooseState();
+  _RevisitTextChooseState createState() => _RevisitTextChooseState();
 }
 
-class _TruWorldTextChooseState extends State<TruWorldTextChoose> {
+class _RevisitTextChooseState extends State<RevisitTextChoose> {
   String _text;
   String _value;
   var _items = <CommonText>[];
@@ -61,7 +61,7 @@ class _TruWorldTextChooseState extends State<TruWorldTextChoose> {
   }
 
   @override
-  void didUpdateWidget(TruWorldTextChoose oldWidget) {
+  void didUpdateWidget(RevisitTextChoose oldWidget) {
     if (oldWidget.initValue != widget.initValue) {
       _value = widget.initValue;
     }

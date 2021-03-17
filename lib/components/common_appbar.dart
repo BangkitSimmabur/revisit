@@ -3,7 +3,7 @@ import 'package:revisit/constant.dart';
 import 'package:revisit/platform/platform_main.dart';
 import 'package:revisit/main_styles.dart';
 
-class AuthAppbar extends StatelessWidget implements PreferredSizeWidget {
+class RevisitAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final IconData trailingIcon;
   final Function onPressTrailing;
@@ -19,7 +19,7 @@ class AuthAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   final Color trailingColor;
 
-  AuthAppbar(
+  RevisitAppbar(
       this.title, {
         Key key,
         this.trailingIcon,

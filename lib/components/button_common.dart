@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 
 import "package:revisit/constant.dart";
 
-class TruWorldButtonCommon extends StatefulWidget {
+class RevisitButtonCommon extends StatefulWidget {
   final String labelText;
   final Color labelColor;
   final double labelSize;
@@ -20,7 +20,7 @@ class TruWorldButtonCommon extends StatefulWidget {
   final bool noHorizontalPadding;
   final Widget extraWidget;
 
-  TruWorldButtonCommon(
+  RevisitButtonCommon(
       this.labelText, {
         this.onPress = _defaultBtnCommonPressed,
         this.labelColor,
@@ -39,11 +39,11 @@ class TruWorldButtonCommon extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _TruWorldButtonCommonState();
+    return _RevisitButtonCommonState();
   }
 }
 
-class _TruWorldButtonCommonState extends State<TruWorldButtonCommon> {
+class _RevisitButtonCommonState extends State<RevisitButtonCommon> {
   String textLabel;
 
   @override
