@@ -27,7 +27,7 @@ abstract class Styles {
   static TextStyle navbarTextStyle = TextStyle(
       color: Colors.white,
       // color: Constant.GRAY_TEXT,
-      fontSize: Constant.MINIMUM_FONT_SIZE_XS + 2,
+      fontSize: Constant.MINIMUM_FONT_SIZE_SM + 2,
       fontWeight: FontWeight.w600);
 
   // Home Styles
@@ -38,6 +38,7 @@ abstract class Styles {
 
   static TextStyle defaultTitleStyle =
       TextStyle(fontWeight: FontWeight.w600, color: Colors.black);
+
   static TextStyle defaultSubtitleStyle = TextStyle(
       fontWeight: FontWeight.w500,
       fontSize: Constant.MINIMUM_FONT_SIZE / 1.3,

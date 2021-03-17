@@ -139,7 +139,6 @@ class Constant{
   static DateTime LAST_DATE = DateTime(2100, 1, 1);
 
   //duration
-  static const String CURR_POSITION_ID = 'CURR_TRUWORLD_POSITION';
   static const double DEFAULT_ZOOM_MAP = 14.0;
   static const double DEFAULT_OPACITY_CUPERTINO_BUTTON = 0.4;
   static const Map<String, Duration> DEFAULT_DURATION_SNACKBAR = {
@@ -153,4 +152,11 @@ class Constant{
   );
   static const String ID_LOCATION_NOW = 'Your Location';
   static const DIGITS = [0, 1, 2, 3, 4, 6, 7, 8, 9];
+
+  //app bar key
+  static final List<String> KEY_TAB_APPBAR = [
+    "key_tab_appbar_article",
+    "key_tab_appbar_story",
+    "key_tab_appbar_profile",
+  ];
 }

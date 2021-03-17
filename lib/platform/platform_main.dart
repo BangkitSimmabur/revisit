@@ -222,7 +222,7 @@ class MainPlatform {
             title: titleWidget,
             content: subtitleWidget,
             actions: <Widget>[
-              TruWorldButtonCommon(
+              RevisitButtonCommon(
                 'Tutup',
                 labelColor: Constant.BLUE03,
                 color: Colors.white,
@@ -231,7 +231,7 @@ class MainPlatform {
                   ConfirmAction.CANCEL,
                 ),
               ),
-              TruWorldButtonCommon(
+              RevisitButtonCommon(
                 'Lanjutkan',
                 labelColor: Colors.white,
                 color: Constant.BLUE03,
@@ -596,7 +596,7 @@ class MainPlatform {
       }) async {
     var textElements = options
         .map(
-          (e) => TruWorldButtonCommon(
+          (e) => RevisitButtonCommon(
         e['label'],
         btnWidth: double.maxFinite,
         labelColor: labelColor,
