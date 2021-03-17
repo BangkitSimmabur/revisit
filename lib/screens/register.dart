@@ -51,21 +51,21 @@ class _RegisterState extends State<Register>
   }
 
   Future<void> _initDataState() async {
-    MainPlatform.showLoadingAlert(
-      context,
-      'Mengambil lokasi',
-    );
-
-    var serverLog = await _locationService.setCurrentLocation(
-      isLastKnown: true,
-    );
-
-    MainPlatform.backTransitionPage(context);
-
-    print(_locationService.address);
-    if (serverLog.success) return;
-
-    return MainPlatform.showErrorSnackbar(context, serverLog.message);
+    // MainPlatform.showLoadingAlert(
+    //   context,
+    //   'Mengambil lokasi',
+    // );
+    //
+    // var serverLog = await _locationService.setCurrentLocation(
+    //   isLastKnown: true,
+    // );
+    //
+    // MainPlatform.backTransitionPage(context);
+    //
+    // print(_locationService.address);
+    // if (serverLog.success) return;
+    //
+    // return MainPlatform.showErrorSnackbar(context, serverLog.message);
   }
 
   /// Initialization of internal states.
@@ -251,7 +251,7 @@ class _RegisterState extends State<Register>
   }
 
   Widget get _appBar {
-    return AuthAppbar(
+    return RevisitAppbar(
       'Registrasi',
       bgColor: Constant.blue01,
       trailingColor: Colors.white,
