@@ -6,44 +6,23 @@ part 'location.g.dart';
 
 @JsonSerializable()
 class LocationData {
-  @JsonKey(name: 'Latitude')
+  @JsonKey(name: 'x')
   double latitude;
-  @JsonKey(name: 'Longitude')
+  @JsonKey(name: 'y')
   double longitude;
-  @JsonKey(name: 'City')
-  String city;
-  @JsonKey(name: 'PostCode')
-  String postCode;
-  @JsonKey(name: 'Country')
-  String country;
-  @JsonKey(name: 'Address')
+  @JsonKey(name: 'address')
   String address;
 
   LocationData(
-      this.latitude,
-      this.longitude,
-      );
-
-  LocationData.fromData(
-      this.latitude,
-      this.longitude, {
-        this.city,
-        this.country,
-        this.address,
-      });
+    this.latitude,
+    this.longitude,
+    this.address,
+  );
 
   factory LocationData.fromJson(Map<String, dynamic> json) =>
       _$LocationDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$LocationDataToJson(this);
-
-  bool get isKorea {
-    if (country == null || country.isEmpty) return false;
-
-    if (country.toUpperCase().contains('korea'.toUpperCase())) return true;
-
-    return false;
-  }
 }
 
 LocationData locationFromJson(dynamic map) {

@@ -34,7 +34,7 @@ class Constant{
   static final Color BLUE03 = Color(0xff0080ff);
   static final Color BLUE025 = Colors.blue.shade200;
   static final Color GRAY01 = Colors.grey.shade700;
-  static final Color GRAY02 = Colors.grey.shade300;
+  static final Color GRAY02 = Color(0xffd6d6d6);
   static final Color GRAY_TEXT = Color(0xff595959);
   static final Color GRAY_TEXT2 = Color(0xffa7a8aa);
   static final Color GRAY_TEXT3 = Color(0xffacabab);

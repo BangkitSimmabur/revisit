@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:revisit/constant.dart';
 
-class RevisitInputBorder extends StatefulWidget {
+class RevisitInputOutlineBorder extends StatefulWidget {
   final TextEditingController inputController;
   final String labelText;
   final bool disableEmptyInput;
@@ -22,7 +22,7 @@ class RevisitInputBorder extends StatefulWidget {
   final bool isDense;
   final Color backGroundColor;
 
-  RevisitInputBorder(
+  RevisitInputOutlineBorder(
     this.labelText, {
     this.inputController,
     this.disableEmptyInput = false,
@@ -44,10 +44,10 @@ class RevisitInputBorder extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _RevisitInputBorderState();
+  State<StatefulWidget> createState() => _RevisitInputOutlineBorderState();
 }
 
-class _RevisitInputBorderState extends State<RevisitInputBorder> {
+class _RevisitInputOutlineBorderState extends State<RevisitInputOutlineBorder> {
   List<TextInputFormatter> inputFormatters = new List();
   String _labelText;
   BorderSide _borderSide;
@@ -104,7 +104,19 @@ class _RevisitInputBorderState extends State<RevisitInputBorder> {
             filled: widget.backGroundColor != null ? true : false,
             // contentPadding: EdgeInsets.only( bottom: 6),
 //            border: InputBorder.none,
-            enabledBorder: OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
+            borderSide: _borderSide,
+            borderRadius: BorderRadius.circular(
+              widget.borderRadius,
+            ),
+          ),
+            border: OutlineInputBorder(
+              borderSide: _borderSide,
+              borderRadius: BorderRadius.circular(
+                widget.borderRadius,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
               borderSide: _borderSide,
               borderRadius: BorderRadius.circular(
                 widget.borderRadius,

@@ -140,7 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return RevisitButtonFull(
       'INPUT LOKASI',
-      isIntl: true,
       buttonColor: Constant.blue01,
       onClick: () {
         _pc.close();

@@ -37,6 +37,7 @@ dependencies:
   image_picker: ^0.6.7
   pull_to_refresh: 1.6.3
   sqflite: 1.1.6+2
+  image_cropper: 1.2.1
   flushbar:
     git:
       url: git://github.com/valterh4ck3r/flushbar

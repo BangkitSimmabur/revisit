@@ -127,7 +127,7 @@ class _LoginState extends State<Login> {
         children: <Widget>[
           Container(
             height: Constant.INPUT_HEIGHT + 2,
-            child: RevisitInputBorder(
+            child: RevisitInputOutlineBorder(
               'email',
               labelColor: Colors.white,
               labelSize: Constant.MINIMUM_FONT_SIZE,
@@ -153,7 +153,7 @@ class _LoginState extends State<Login> {
           ),
           Container(
             height: Constant.INPUT_HEIGHT + 2,
-            child: RevisitInputBorder(
+            child: RevisitInputOutlineBorder(
               'password',
               labelColor: Colors.white,
               labelWeight: FontWeight.w600,

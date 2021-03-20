@@ -73,8 +73,8 @@ class RevisitInputCommon extends StatefulWidget {
     Color borderColor,
     this.borderRadius = BorderRadius.zero,
   }) {
-    this.labelColor = labelColor != null ? labelColor : Colors.grey;
-    this.borderColor = borderColor != null ? borderColor : Colors.grey;
+    this.labelColor = labelColor != null ? labelColor : Constant.GRAY_TEXT;
+    this.borderColor = borderColor != null ? borderColor : Constant.GRAY_TEXT;
   }
 
   @override

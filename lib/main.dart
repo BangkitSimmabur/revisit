@@ -77,63 +77,55 @@ class _MyAppState extends State<MyApp> {
           ),
         ],
         child: RefreshConfiguration(
-            headerBuilder: () => MaterialClassicHeader(),
-            footerBuilder: () => ClassicFooter(
-                  loadStyle: LoadStyle.ShowAlways,
-                ),
-            child: GestureDetector(
-              onTap: _removeFocus,
-              child: RefreshConfiguration(
-                headerBuilder: () => MaterialClassicHeader(),
-                footerBuilder: () => ClassicFooter(
-                  loadStyle: LoadStyle.ShowAlways,
-                ),
-                child: GestureDetector(
-                  onTap: _removeFocus,
-                  child: MaterialApp(
-                    title: 'ReVisit',
-                    debugShowCheckedModeBanner: false,
-                    theme: ThemeData(
-                        primarySwatch: Colors.blue,
-                        fontFamily: 'Rubik',
-                        scaffoldBackgroundColor: Constant.GRAY_BACKGROUND,
-                        textTheme: TextTheme(
-                          headline5: TextStyle(
-                            fontSize: 72.0,
-                            color: Colors.black,
-                          ),
-                          headline1: TextStyle(
-                            fontSize: 40.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w800,
-                          ),
-                          headline2: TextStyle(
-                            fontSize: 32.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          headline3: TextStyle(
-                            // AppBar Title
-                            fontSize: 24.0,
-                            color: Colors.black,
-                          ),
-                          headline4: TextStyle(
-                            // AppBar Title
-                            fontSize: 16.0,
-                            color: Colors.black,
-                          ),
-                          bodyText2: TextStyle(
-                            fontSize: 14.0,
-                          ),
-                        )),
-                    themeMode: ThemeMode.light,
-                    onGenerateRoute: (route) => _routeMap[route.name](
-                      route.arguments,
+          headerBuilder: () => MaterialClassicHeader(),
+          footerBuilder: () => ClassicFooter(
+            loadStyle: LoadStyle.ShowAlways,
+          ),
+          child: GestureDetector(
+            onTap: _removeFocus,
+            child: MaterialApp(
+              title: 'ReVisit',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                  primarySwatch: Colors.blue,
+                  fontFamily: 'Rubik',
+                  scaffoldBackgroundColor: Constant.GRAY_BACKGROUND,
+                  textTheme: TextTheme(
+                    headline5: TextStyle(
+                      fontSize: 72.0,
+                      color: Colors.black,
                     ),
-                  ),
-                ),
+                    headline1: TextStyle(
+                      fontSize: 40.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w800,
+                    ),
+                    headline2: TextStyle(
+                      fontSize: 32.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    headline3: TextStyle(
+                      // AppBar Title
+                      fontSize: 24.0,
+                      color: Colors.black,
+                    ),
+                    headline4: TextStyle(
+                      // AppBar Title
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    bodyText2: TextStyle(
+                      fontSize: 14.0,
+                    ),
+                  )),
+              themeMode: ThemeMode.light,
+              onGenerateRoute: (route) => _routeMap[route.name](
+                route.arguments,
               ),
-            )));
+            ),
+          ),
+        ));
   }
 
   Map get _routeMap {
@@ -153,11 +145,18 @@ class _MyAppState extends State<MyApp> {
   // }
 
   void _removeFocus() {
+
+    print("tapped");
     var currentFocus = FocusScope.of(context);
 
-    if (!currentFocus.hasPrimaryFocus || currentFocus.focusedChild == null)
+    print(currentFocus);
+    print(currentFocus.focusedChild);
+    print(currentFocus.hasFocus);
+
+    if (!currentFocus.hasFocus || currentFocus.focusedChild == null)
       return;
 
     currentFocus.focusedChild.unfocus();
+    // FocusManager.instance.primaryFocus?.unfocus();
   }
 }

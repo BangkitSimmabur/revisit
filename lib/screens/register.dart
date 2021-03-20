@@ -135,7 +135,7 @@ class _RegisterState extends State<Register>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              RevisitInputBorder(
+              RevisitInputOutlineBorder(
                 'nama',
                 labelColor: Constant.blue01,
                 labelSize: Constant.MINIMUM_FONT_SIZE,
@@ -152,7 +152,7 @@ class _RegisterState extends State<Register>
               Container(
                 height: Constant.MINIMUM_SPACING_XLG,
               ),
-              RevisitInputBorder(
+              RevisitInputOutlineBorder(
                 'username',
                 labelColor: Constant.blue01,
                 labelSize: Constant.MINIMUM_FONT_SIZE,
@@ -169,7 +169,7 @@ class _RegisterState extends State<Register>
               Container(
                 height: Constant.MINIMUM_SPACING_XLG,
               ),
-              RevisitInputBorder(
+              RevisitInputOutlineBorder(
                 'email',
                 labelColor: Constant.blue01,
                 labelSize: Constant.MINIMUM_FONT_SIZE,
@@ -187,7 +187,7 @@ class _RegisterState extends State<Register>
               Container(
                 height: Constant.MINIMUM_SPACING_XLG,
               ),
-              RevisitInputBorder(
+              RevisitInputOutlineBorder(
                 'password',
                 labelColor: Constant.blue01,
                 labelWeight: FontWeight.w600,

@@ -11,7 +11,6 @@ class RevisitButtonFull extends StatefulWidget {
   final Function onClick;
   final GlobalKey key;
   final double borderRadius;
-  final bool isIntl;
   final bool isLoading;
   final double width;
   final double padding;
@@ -30,8 +29,7 @@ class RevisitButtonFull extends StatefulWidget {
         this.labelColor,
         this.labelSize = Constant.MINIMUM_FONT_SIZE * 1.5,
         this.onClick,
-        this.borderRadius = 10.0,
-        this.isIntl = false,
+        this.borderRadius = 0.0,
         this.isLoading = false,
         this.width = double.maxFinite,
         this.padding = Constant.MINIMUM_PADDING_BUTTON,
