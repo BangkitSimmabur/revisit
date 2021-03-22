@@ -16,10 +16,12 @@ import 'package:revisit/components/button_full.dart';
 import 'package:revisit/components/inputCommon.dart';
 import 'package:revisit/components/revisit_spinner.dart';
 import 'package:revisit/constant.dart';
+import 'package:revisit/service/article_service.dart';
 import 'package:revisit/service/auth_service.dart';
 import 'package:revisit/service/constant_service.dart';
 import 'package:revisit/service/location_service.dart';
 import 'package:revisit/service/navigation_service.dart';
+import 'package:revisit/service/story_service.dart';
 import 'package:revisit/type.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:revisit/service/network_service.dart';
@@ -74,6 +76,12 @@ class _MyAppState extends State<MyApp> {
           ),
           ChangeNotifierProvider<AuthService>(
             create: (_) => AuthService(ConstantService()),
+          ),
+          ChangeNotifierProvider<StoryService>(
+            create: (_) => StoryService(ConstantService()),
+          ),
+          ChangeNotifierProvider<ArticleService>(
+            create: (_) => ArticleService(ConstantService()),
           ),
         ],
         child: RefreshConfiguration(
@@ -145,7 +153,6 @@ class _MyAppState extends State<MyApp> {
   // }
 
   void _removeFocus() {
-
     print("tapped");
     var currentFocus = FocusScope.of(context);
 
@@ -153,8 +160,7 @@ class _MyAppState extends State<MyApp> {
     print(currentFocus.focusedChild);
     print(currentFocus.hasFocus);
 
-    if (!currentFocus.hasFocus || currentFocus.focusedChild == null)
-      return;
+    if (!currentFocus.hasFocus || currentFocus.focusedChild == null) return;
 
     currentFocus.focusedChild.unfocus();
     // FocusManager.instance.primaryFocus?.unfocus();

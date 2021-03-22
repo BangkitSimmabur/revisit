@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 
+enum ItemAction { create, update }
+
 class Constant{
   //border
   static const double MINIMUM_BORDER_RADIUS = 8.0;
@@ -159,4 +161,5 @@ class Constant{
     "key_tab_appbar_story",
     "key_tab_appbar_profile",
   ];
+
 }
