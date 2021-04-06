@@ -60,6 +60,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  var _constantService = ConstantService();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -72,16 +74,16 @@ class _MyAppState extends State<MyApp> {
             create: (_) => LocationService(),
           ),
           ChangeNotifierProvider<NetworkService>(
-            create: (_) => NetworkService(ConstantService()),
+            create: (_) => NetworkService(_constantService),
           ),
           ChangeNotifierProvider<AuthService>(
-            create: (_) => AuthService(ConstantService()),
+            create: (_) => AuthService(_constantService),
           ),
           ChangeNotifierProvider<StoryService>(
-            create: (_) => StoryService(ConstantService()),
+            create: (_) => StoryService(_constantService),
           ),
           ChangeNotifierProvider<ArticleService>(
-            create: (_) => ArticleService(ConstantService()),
+            create: (_) => ArticleService(_constantService),
           ),
         ],
         child: RefreshConfiguration(
