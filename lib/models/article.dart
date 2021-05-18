@@ -26,16 +26,12 @@ class Article {
   LocationData location;
   @JsonKey(
     name: 'createdAt',
-    fromJson: DateUtils.convertDateAndIsoString,
-    toJson: DateUtils.convertDateAndIsoString,
   )
-  DateTime createdAt;
+  String createdAt;
   @JsonKey(
     name: 'updateAt',
-    fromJson: DateUtils.convertDateAndIsoString,
-    toJson: DateUtils.convertDateAndIsoString,
   )
-  DateTime updateAt;
+  String updateAt;
   @JsonKey(name: 'published', fromJson: isPublishedFromJson)
   IsPublished published;
   @JsonKey(name: 'picture', fromJson: pictureFromJson)
@@ -108,16 +104,12 @@ class ArticleV2 {
   LocationData location;
   @JsonKey(
     name: 'createdAt',
-    fromJson: DateUtils.convertDateAndIsoString,
-    toJson: DateUtils.convertDateAndIsoString,
   )
-  DateTime createdAt;
+  String createdAt;
   @JsonKey(
     name: 'updateAt',
-    fromJson: DateUtils.convertDateAndIsoString,
-    toJson: DateUtils.convertDateAndIsoString,
   )
-  DateTime updateAt;
+  String updateAt;
   @JsonKey(name: 'published', fromJson: isPublishedFromJson)
   IsPublished published;
   @JsonKey(name: 'picture', fromJson: pictureFromJson)

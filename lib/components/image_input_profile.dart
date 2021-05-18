@@ -7,24 +7,24 @@ import 'package:image_picker/image_picker.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/platform/platform_main.dart';
 
-class RevisitInputImageCommon extends StatefulWidget {
+class RevisitInputImageProfile extends StatefulWidget {
   final String src;
   final SavedImageProfile onSavedImage;
   final bool isLoading;
 
-  RevisitInputImageCommon(
-      this.src, {
-        this.onSavedImage,
-        this.isLoading = false,
-      });
+  RevisitInputImageProfile(
+    this.src, {
+    this.onSavedImage,
+    this.isLoading = false,
+  });
 
   @override
   State<StatefulWidget> createState() {
-    return _RevisitInputImageCommonState();
+    return _RevisitInputImageProfileState();
   }
 }
 
-class _RevisitInputImageCommonState extends State<RevisitInputImageCommon> {
+class _RevisitInputImageProfileState extends State<RevisitInputImageProfile> {
   File galleryFile;
   double width;
   double heightBtn;
@@ -55,7 +55,7 @@ class _RevisitInputImageCommonState extends State<RevisitInputImageCommon> {
             child: CircularProgressIndicator(
               value: loadingProgress.expectedTotalBytes != null
                   ? loadingProgress.cumulativeBytesLoaded /
-                  loadingProgress.expectedTotalBytes
+                      loadingProgress.expectedTotalBytes
                   : null,
             ),
           );
@@ -73,6 +73,7 @@ class _RevisitInputImageCommonState extends State<RevisitInputImageCommon> {
         'assets/images/placeholder_image.png',
         fit: BoxFit.cover,
         width: width,
+        height: width,
       );
     }
 
@@ -81,36 +82,36 @@ class _RevisitInputImageCommonState extends State<RevisitInputImageCommon> {
       padding: EdgeInsets.all(Constant.MINIMUM_PADDING / 2),
       child: Center(
           child: Stack(
-            overflow: Overflow.visible,
-            children: <Widget>[
-              this.widget.isLoading ? _profileImgLoading : _profileImgPlaceholder,
-              Positioned(
-                right: -this.heightBtn / 3,
-                bottom: -this.heightBtn / 5,
-                child: Container(
-                  width: width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ButtonTheme(
-                        height: this.heightBtn,
-                        disabledColor: Colors.grey.shade400,
-                        child: RaisedButton(
-                          onPressed: !this.widget.isLoading ? _selectImage : null,
-                          child:
+        overflow: Overflow.visible,
+        children: <Widget>[
+          this.widget.isLoading ? _profileImgLoading : _profileImgPlaceholder,
+          Positioned(
+            right: -this.heightBtn / 3,
+            bottom: -this.heightBtn / 5,
+            child: Container(
+              width: width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ButtonTheme(
+                    height: this.heightBtn,
+                    disabledColor: Colors.grey.shade400,
+                    child: RaisedButton(
+                      onPressed: !this.widget.isLoading ? _selectImage : null,
+                      child:
                           Icon(Icons.camera_alt, size: this.heightBtn - 15.0),
-                          shape: new CircleBorder(),
-                          elevation: 2.0,
-                          color: Colors.grey.shade200,
-                        ),
-                      ),
-                    ],
+                      shape: new CircleBorder(),
+                      elevation: 2.0,
+                      color: Colors.grey.shade200,
+                    ),
                   ),
-                ),
-              )
-            ],
-          )),
+                ],
+              ),
+            ),
+          )
+        ],
+      )),
     );
   }
 
@@ -133,20 +134,8 @@ class _RevisitInputImageCommonState extends State<RevisitInputImageCommon> {
 
     File croppedFile = await ImageCropper.cropImage(
         sourcePath: pickedImage.path,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
+        aspectRatioPresets: [
           CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9
-        ]
-            : [
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9
         ],
         androidUiSettings: AndroidUiSettings(
           toolbarTitle: source == ImageSource.camera ? "Kamera" : "Galeri",
@@ -172,10 +161,10 @@ class _RevisitInputImageCommonState extends State<RevisitInputImageCommon> {
       }
     } else {
       setState(() {
-        this.galleryFile = pickedImage;
+        this.galleryFile = null;
       });
       if (widget.onSavedImage != null) {
-        widget.onSavedImage(galleryFile);
+        widget.onSavedImage(null);
       }
     }
   }

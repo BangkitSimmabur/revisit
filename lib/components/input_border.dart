@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:revisit/constant.dart';
+import 'package:revisit/type.dart';
 
 class RevisitInputOutlineBorder extends StatefulWidget {
   final TextEditingController inputController;
@@ -21,6 +22,7 @@ class RevisitInputOutlineBorder extends StatefulWidget {
   final Color errorColor;
   final bool isDense;
   final Color backGroundColor;
+  final OnChangeStr onChange;
 
   RevisitInputOutlineBorder(
     this.labelText, {
@@ -41,6 +43,7 @@ class RevisitInputOutlineBorder extends StatefulWidget {
     this.borderRadius = Constant.MINIMUM_BORDER_RADIUS_LG,
     this.isDense = true,
     this.backGroundColor = Colors.transparent,
+    this.onChange,
   });
 
   @override
@@ -91,10 +94,11 @@ class _RevisitInputOutlineBorderState extends State<RevisitInputOutlineBorder> {
       child: Material(
         color: Colors.transparent,
         child: TextFormField(
-          // autovalidate: widget.autoValidate,
+          autovalidateMode: widget.autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
           keyboardType: this.widget.keyboardType,
           obscureText: this.widget.obscureText,
           controller: this.widget.inputController,
+          onChanged: this.widget.onChange,
           style: textStyle,
           inputFormatters: this.inputFormatters,
           validator: widget.onValidate,
@@ -104,12 +108,12 @@ class _RevisitInputOutlineBorderState extends State<RevisitInputOutlineBorder> {
             filled: widget.backGroundColor != null ? true : false,
             // contentPadding: EdgeInsets.only( bottom: 6),
 //            border: InputBorder.none,
-          enabledBorder: OutlineInputBorder(
-            borderSide: _borderSide,
-            borderRadius: BorderRadius.circular(
-              widget.borderRadius,
+            enabledBorder: OutlineInputBorder(
+              borderSide: _borderSide,
+              borderRadius: BorderRadius.circular(
+                widget.borderRadius,
+              ),
             ),
-          ),
             border: OutlineInputBorder(
               borderSide: _borderSide,
               borderRadius: BorderRadius.circular(

@@ -180,10 +180,10 @@ class _RevisitInputImageCommonState extends State<RevisitInputImageCommon> {
       }
     } else {
       setState(() {
-        this.galleryFile = pickedImage;
+        this.galleryFile = null;
       });
       if (widget.onSavedImage != null) {
-        widget.onSavedImage(galleryFile);
+        widget.onSavedImage(null);
       }
     }
   }

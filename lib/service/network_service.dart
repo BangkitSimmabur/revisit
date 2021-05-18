@@ -18,14 +18,12 @@ class NetworkService with ChangeNotifier {
 
     if (constantService.token != null) {
       header = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": "Bearer ${constantService.token}",
+        'Content-Type': 'application/json',
+        'Bearer' : "${constantService.token}"
       };
     } else {
       header = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
+        'Content-Type': 'application/json',
       };
     }
 
@@ -33,11 +31,12 @@ class NetworkService with ChangeNotifier {
 
     var resBody = json.decode(response.body);
 
-    if (resBody['check'] == true) {
-      return HandlingServerLog.success(resBody['check'], resBody['results']);
-    } else {
-      return HandlingServerLog.failed(resBody['check'], resBody['caption']);
-    }
+    // if (resBody['check'] == true) {
+    //   return HandlingServerLog.success(resBody['check'], resBody['results']);
+    // } else {
+    //   return HandlingServerLog.failed(resBody['check'], resBody['caption']);
+    // }
+    return new HandlingServerLog(resBody['check'], resBody['results'], resBody['caption']);
   }
 
   Future<HandlingServerLog> doHttpPost(
@@ -48,15 +47,14 @@ class NetworkService with ChangeNotifier {
 
     var requestBody = json.encode(reqBody);
 
-    print(requestBody);
-    print(reqBody);
     var header;
 
+    print(url);
     if (constantService.token != null) {
       header = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer ${constantService.token}",
+        'Bearer' : "${constantService.token}"
       };
     } else {
       header = {
@@ -70,11 +68,12 @@ class NetworkService with ChangeNotifier {
 
     var resBody = json.decode(response.body);
 
-    if (resBody['check'] == true) {
-      return HandlingServerLog.success(resBody['check'], resBody['results']);
-    } else {
-      return HandlingServerLog.failed(resBody['check'], resBody['caption']);
-    }
+    // if (resBody['check'] == true) {
+    //   return HandlingServerLog.success(resBody['check'], resBody['results']);
+    // } else {
+    //   return HandlingServerLog.failed(resBody['check'], resBody['caption']);
+    // }
+    return new HandlingServerLog(resBody['check'], resBody['results'], resBody['caption']);
   }
 
   Future<HandlingServerLog> doHttpPut(
@@ -83,17 +82,21 @@ class NetworkService with ChangeNotifier {
   ) async {
     String reqUrl = "https://revisit-backend.herokuapp.com/api/$url";
 
-    var requestBody = json.encode(reqBody);
+    var requestBody;
+    if (reqBody == null) {
+      requestBody = null;
+    }
+    if (reqBody != null) {
+      requestBody = json.encode(reqBody);
+    }
 
-    print(requestBody);
-    print(reqBody);
     var header;
 
     if (constantService.token != null) {
       header = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer ${constantService.token}",
+        'Bearer' : "${constantService.token}"
       };
     } else {
       header = {
@@ -105,13 +108,16 @@ class NetworkService with ChangeNotifier {
     http.Response response =
         await http.put(reqUrl, body: requestBody, headers: header);
 
+    print(response);
+    print(response.body);
     var resBody = json.decode(response.body);
 
-    if (resBody['check'] == true) {
-      return HandlingServerLog.success(resBody['check'], resBody['results']);
-    } else {
-      return HandlingServerLog.failed(resBody['check'], resBody['caption']);
-    }
+    // if (resBody['check'] == true) {
+    //   return HandlingServerLog.success(resBody['check'], resBody['results']);
+    // } else {
+    //   return HandlingServerLog.failed(resBody['check'], resBody['caption']);
+    // }
+    return new HandlingServerLog(resBody['check'], resBody['results'], resBody['caption']);
   }
 
   Future<HandlingServerLog> doHttpDelete(url) async {
@@ -123,7 +129,7 @@ class NetworkService with ChangeNotifier {
       header = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer ${constantService.token}",
+        'Bearer' : "${constantService.token}"
       };
     } else {
       header = {
@@ -136,11 +142,12 @@ class NetworkService with ChangeNotifier {
 
     var resBody = json.decode(response.body);
 
-    if (resBody['check'] == true) {
-      return HandlingServerLog.success(resBody['check'], resBody['results']);
-    } else {
-      return HandlingServerLog.failed(resBody['check'], resBody['caption']);
-    }
+    // if (resBody['check'] == true) {
+    //   return HandlingServerLog.success(resBody['check'], resBody['results']);
+    // } else {
+    //   return HandlingServerLog.failed(resBody['check'], resBody['caption']);
+    // }
+    return new HandlingServerLog(resBody['check'], resBody['results'], resBody['caption']);
   }
 
   Future<HandlingServerLog> doHttpPutUpload(url,File file) async {
@@ -152,7 +159,7 @@ class NetworkService with ChangeNotifier {
       header = {
         "Content-type": "multipart/form-data",
         "Accept": "application/json",
-        "Authorization": "Bearer ${constantService.token}",
+        'Bearer' : "${constantService.token}"
       };
     } else {
       header = {
@@ -169,15 +176,15 @@ class NetworkService with ChangeNotifier {
 
     request.headers.addAll(header);
 
-    print("request: "+request.toString());
     var response = await request.send();
     var res = await http.Response.fromStream(response);
     var resBody = json.decode(res.body);
 
-    if (resBody['check'] == true) {
-      return HandlingServerLog.success(resBody['check'], resBody['results']);
-    } else {
-      return HandlingServerLog.failed(resBody['check'], resBody['caption']);
-    }
+    // if (resBody['check'] == true) {
+    //   return HandlingServerLog.success(resBody['check'], resBody['results']);
+    // } else {
+    //   return HandlingServerLog.failed(resBody['check'], resBody['caption']);
+    // }
+    return new HandlingServerLog(resBody['check'], resBody['results'], resBody['caption']);
   }
 }

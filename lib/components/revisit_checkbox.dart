@@ -92,7 +92,7 @@ class _RevisitCheckboxState extends State<RevisitCheckbox> {
             ),
 
             Container(
-              width: Constant.MINIMUM_SPACING_MD,
+              width: Constant.MINIMUM_SPACING_SM,
             ),
 
             SizedBox(

@@ -7,26 +7,32 @@ import 'package:revisit/components/common_appbar.dart';
 import 'package:revisit/components/image_input_common.dart';
 import 'package:revisit/components/inputCommon.dart';
 import 'package:revisit/components/input_map.dart';
+import 'package:revisit/components/revisit_spinner.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/models/location.dart';
 import 'package:revisit/platform/platform_main.dart';
-import 'package:revisit/service/article_service.dart';
+import 'package:revisit/service/story_service.dart';
 
-class CreateArticle extends StatefulWidget {
+class EditStory extends StatefulWidget {
+  final String id;
+
+  EditStory({this.id});
   @override
-  _CreateArticleState createState() => _CreateArticleState();
+  _EditStoryState createState() => _EditStoryState();
 }
 
-class _CreateArticleState extends State<CreateArticle> {
+class _EditStoryState extends State<EditStory> {
   File _imageFile;
+  String _imgSrc;
   bool _isLoading = false;
   bool _isLoadingImg = false;
-  LocationData location;
+  LocationData location = new LocationData(null, null, "");
+  bool canUpdate = false;
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descController = TextEditingController();
 
-  ArticleService _articleService;
+  StoryService _storyService;
   @override
   void dispose() {
     _titleController.dispose();
@@ -36,14 +42,32 @@ class _CreateArticleState extends State<CreateArticle> {
 
   @override
   void initState() {
-    location = new LocationData(null, null, "");
+    Future.delayed(Duration.zero, initDataState);
 
     super.initState();
   }
 
+  Future initDataState() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    await _storyService.getStoryById(widget.id);
+    setState(() {
+      _titleController.text = _storyService.currentStoryV2.title;
+      _descController.text = _storyService.currentStoryV2.text;
+      location = _storyService.currentStoryV2.location;
+      _imgSrc = _storyService.currentStoryV2.picture.fullImage;
+    });
+    setState(() {
+      _isLoading = false;
+    });
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
-    _articleService = Provider.of<ArticleService>(context);
+    _storyService = Provider.of<StoryService>(context);
 
     return Scaffold(
       appBar: _appBar,
@@ -52,6 +76,10 @@ class _CreateArticleState extends State<CreateArticle> {
   }
 
   Widget get _childElement {
+    if (_isLoading) {
+      return RevisitSpinner();
+    }
+
     return Stack(
       children: [
         Column(
@@ -76,19 +104,22 @@ class _CreateArticleState extends State<CreateArticle> {
           height: Constant.MINIMUM_SPACING,
         ),
         RevisitInputCommon(
-          'Judul Artikel',
-          hintText: 'Judul Artikel',
+          'Judul Cerita',
+          hintText: 'Judul Cerita',
           labelMinLine: 1,
           labelMaxLine: 3,
           isDense: true,
           inputController: _titleController,
           noLabel: true,
           labelColor: Colors.black,
+          onChange: (val) {
+            _onCheckCanUpdate();
+          },
         ),
         Container(
           height: Constant.MINIMUM_SPACING_LG,
         ),
-        _photoIntput,
+        _photoInput,
         Container(
           height: Constant.MINIMUM_SPACING_LG,
         ),
@@ -105,6 +136,9 @@ class _CreateArticleState extends State<CreateArticle> {
           inputController: _descController,
           noLabel: true,
           labelColor: Colors.black,
+          onChange: (val) {
+            _onCheckCanUpdate();
+          },
         ),
       ],
     );
@@ -143,13 +177,13 @@ class _CreateArticleState extends State<CreateArticle> {
                   Expanded(
                       child: isLocationExist
                           ? Text(
-                        location.address,
-                        style: _style,
-                      )
+                              location.address,
+                              style: _style,
+                            )
                           : Text(
-                        'Masukkan Lokasi',
-                        style: _style,
-                      )),
+                              'Masukkan Lokasi',
+                              style: _style,
+                            )),
                   Container(
                     width: Constant.MINIMUM_SPACING,
                   ),
@@ -183,32 +217,32 @@ class _CreateArticleState extends State<CreateArticle> {
       context,
       RevisitInputMap(
         initLocationData: location,
+        isNew: false,
       ),
     );
-
-    print(data);
 
     if (data == null) return;
 
     setState(() => location = data);
+    _onCheckCanUpdate();
   }
 
   Widget get _createStoreBtn {
     return RevisitButtonFull(
-      "BUAT ARTIKEL",
+      "SUNTING CERITA",
       buttonColor: Constant.blue01,
-      onClick: _onCreateArticle,
+      onClick: canUpdate ? _onUpdateStory : null,
       isLoading: _isLoading,
       padding: Constant.MINIMUM_PADDING_BUTTON_MD,
       labelSize: Constant.MINIMUM_FONT_SIZE - 2,
     );
   }
 
-  void _onCreateArticle() async {
+  void _onUpdateStory() async {
     if (_titleController.text.isEmpty || _titleController.text == null) {
       MainPlatform.showFloatingSnackbar(
         context,
-        'Judul artikel tidak diisi',
+        'Judul cerita tidak diisi',
         color: Constant.red01,
       );
       return;
@@ -217,7 +251,7 @@ class _CreateArticleState extends State<CreateArticle> {
     if (_descController.text.isEmpty || _descController.text == null) {
       MainPlatform.showFloatingSnackbar(
         context,
-        'Isi artikel tidak diisi',
+        'Isi cerita tidak diisi',
         color: Constant.red01,
       );
       return;
@@ -225,7 +259,7 @@ class _CreateArticleState extends State<CreateArticle> {
     if (location.address == null || location.address.isEmpty) {
       MainPlatform.showFloatingSnackbar(
         context,
-        'Lokasi artikel tidak diisi',
+        'Lokasi cerita tidak diisi',
         color: Constant.red01,
       );
       return;
@@ -233,44 +267,56 @@ class _CreateArticleState extends State<CreateArticle> {
     setState(() {
       _isLoading = true;
     });
-    MainPlatform.showLoadingAlert(context, 'Membuat artikel');
-    var serverLog = await _articleService.createArticle(
+    MainPlatform.showLoadingAlert(context, 'Menyunting cerita');
+    await _storyService.updateStory(
+      id: _storyService.currentStoryV2.id,
+      context: context,
       title: _titleController.text,
-      action: ItemAction.create,
       locationData: location,
       photo: _imageFile,
       text: _descController.text,
     );
-    setState(() {
-      _isLoading = false;
-    });
-
-    if(serverLog.success) {
-      MainPlatform.backTransitionPage(context);
-      MainPlatform.backTransitionPage(context);
-    }
-    if(!serverLog.success) {
-      MainPlatform.backTransitionPage(context);
-      MainPlatform.showErrorSnackbar(context, 'Gagal membuat artikel');
-    }
   }
 
-  Widget get _photoIntput {
+  Widget get _photoInput {
     return RevisitInputImageCommon(
-      null,
+      _imgSrc,
       onSavedImage: (File img) {
         setState(() {
           _imageFile = img;
-        });      },
+        });
+        _onCheckCanUpdate();
+      },
       isLoading: _isLoadingImg,
     );
   }
 
   Widget get _appBar {
     return RevisitAppbar(
-      'Buat Artikel',
+      'Sunting Cerita',
       bgColor: Constant.blue01,
       trailingColor: Colors.white,
     );
+  }
+
+  Future<void> _onCheckCanUpdate() async {
+    if (_imageFile != null ||
+        location != _storyService.currentStoryV2.location ||
+        _titleController.text != _storyService.currentStoryV2.title ||
+        _descController.text != _storyService.currentStoryV2.text) {
+      setState(() {
+        canUpdate = true;
+      });
+      return;
+    }
+
+    if (_imageFile == null &&
+        location == _storyService.currentStoryV2.location &&
+        _titleController.text == _storyService.currentStoryV2.title &&
+        _descController.text == _storyService.currentStoryV2.text) {
+      setState(() {
+        canUpdate = false;
+      });
+    }
   }
 }

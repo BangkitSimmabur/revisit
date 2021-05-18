@@ -20,6 +20,8 @@ class Comments {
   Comments(
     this.id,
     this.comments,
+    this.storyId,
+    this.articleId,
   );
 
   factory Comments.fromJson(Map<String, dynamic> json) =>
@@ -46,10 +48,8 @@ List<Comments> commentsFromJson(dynamic map) {
 class Comment {
   @JsonKey(
     name: 'createdAt',
-    fromJson: DateUtils.convertDateAndIsoString,
-    toJson: DateUtils.convertDateAndIsoString,
   )
-  DateTime createdAt;
+  String createdAt;
   @JsonKey(name: '_user', fromJson: userFromJson)
   User user;
   @JsonKey(name: 'comment')
@@ -78,27 +78,3 @@ Comment commentFromJson(dynamic map) {
 
   return _$CommentFromJson(decoded);
 }
-// comments": [
-// {
-// "comments": {
-// "createdAt": "Date.now()",
-// "_user": {
-// "picture": {
-// "imageId": "The objectId of this image that refers to imagekit",
-// "imageName": "username_thenameofthisfile",
-// "fullImage": "The url for fullwidth image",
-// "thumbnailImage": "The url for thumbnailwidth image"
-// },
-// "isAdmin": true,
-// "name": "Your Fullname",
-// "username": "yourusername",
-// "email": "youremail@mail.com",
-// "_id": "The object id of user"
-// },
-// "comment": "komentarnya"
-// },
-// "_id": "the objectId of this comment",
-// "_articleId": "the article objectid if this comment is on article, if no, it will show null",
-// "_storyId": "the story objectid if this comment is on article, if no, it will show null"
-// }
-// ]

@@ -53,6 +53,8 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
 
+    print(isLoggedIn);
+    print(_constantService.token);
     if (isLoggedIn) {
       destination = MainTab();
     } else {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:revisit/components/button_full.dart';
 import 'package:revisit/components/button_full_border.dart';
 import 'package:revisit/components/common_appbar.dart';
 import 'package:revisit/components/input_border.dart';
@@ -13,6 +14,7 @@ import 'package:revisit/service/handling_server_log.dart';
 import 'package:revisit/service/location_service.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/service/navigation_service.dart';
+import 'package:revisit/utility/signup_util.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -24,7 +26,6 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register>
     with SingleTickerProviderStateMixin {
   Widget childElement;
-  TabController _tabController;
   var _locatorModel = GetIt.I<NavigationService>();
   var _navigatorKey = GlobalKey<NavigatorState>();
   GlobalKey<FormState> _signUpKey = GlobalKey<FormState>();
@@ -37,7 +38,9 @@ class _RegisterState extends State<Register>
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
+  bool _canRegister = false;
 
   LocationService _locationService;
 
@@ -50,23 +53,7 @@ class _RegisterState extends State<Register>
     super.initState();
   }
 
-  Future<void> _initDataState() async {
-    // MainPlatform.showLoadingAlert(
-    //   context,
-    //   'Mengambil lokasi',
-    // );
-    //
-    // var serverLog = await _locationService.setCurrentLocation(
-    //   isLastKnown: true,
-    // );
-    //
-    // MainPlatform.backTransitionPage(context);
-    //
-    // print(_locationService.address);
-    // if (serverLog.success) return;
-    //
-    // return MainPlatform.showErrorSnackbar(context, serverLog.message);
-  }
+  Future<void> _initDataState() async {}
 
   /// Initialization of internal states.
   void _initInternalState() {
@@ -77,7 +64,12 @@ class _RegisterState extends State<Register>
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+
     if (_signUpKey.currentState != null) {
       _signUpKey.currentState.dispose();
     }
@@ -113,9 +105,12 @@ class _RegisterState extends State<Register>
       key: _signUpKey,
       child: Stack(
         children: [
-          ListView(
+          Column(
             children: [
-              _formElement,
+              Expanded(
+                child: Center(child: _formElement),
+              ),
+              _registerButton,
             ],
           ),
         ],
@@ -124,7 +119,7 @@ class _RegisterState extends State<Register>
   }
 
   Widget get _formElement {
-    return Column(
+    return ListView(
       children: [
         Padding(
           padding: EdgeInsets.only(
@@ -148,6 +143,10 @@ class _RegisterState extends State<Register>
                 inputController: _nameController,
                 borderRadius: 0,
                 isDense: false,
+                onChange: (val) {
+                  checkCanRegister();
+                  print("1");
+                },
               ),
               Container(
                 height: Constant.MINIMUM_SPACING_XLG,
@@ -165,6 +164,10 @@ class _RegisterState extends State<Register>
                 inputController: _usernameController,
                 borderRadius: 0,
                 isDense: false,
+                onChange: (val) {
+                  checkCanRegister();
+                  print("2");
+                },
               ),
               Container(
                 height: Constant.MINIMUM_SPACING_XLG,
@@ -183,12 +186,53 @@ class _RegisterState extends State<Register>
                 inputController: _emailController,
                 borderRadius: 0,
                 isDense: false,
+                onValidate: (String email) {
+                  return SignUpUtils.emailRegexValidate(context, email);
+                },
+                errorColor: Colors.red,
+                errorMaxLines: 3,
+                autoValidate: true,
+                onChange: (val) {
+                  checkCanRegister();
+                  print("3");
+                },
               ),
               Container(
                 height: Constant.MINIMUM_SPACING_XLG,
               ),
               RevisitInputOutlineBorder(
-                'password',
+                'kata sandi',
+                labelColor: Constant.blue01,
+                labelWeight: FontWeight.w600,
+                labelSize: Constant.MINIMUM_FONT_SIZE,
+                borderSide: BorderSide(
+                  color: Constant.blue01,
+                  width: Constant.MINIMUM_BORDER_WIDTH,
+                ),
+                isDense: false,
+                obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
+                noPadding: true,
+                autoValidate: true,
+                inputController: _passwordController,
+                borderRadius: 0,
+                onValidate: (String password) {
+                  return SignUpUtils.passwordRegexValidate(context, password);
+                },
+                errorColor: Colors.red,
+                errorMaxLines: 3,
+                onChange: (val) {
+                  checkCanRegister();
+                  print("4");
+                },
+              ),
+              Container(
+                height: Constant.MINIMUM_SPACING_XLG,
+              ),
+              RevisitInputOutlineBorder(
+                'ulangi kata sandi',
+                obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
                 labelColor: Constant.blue01,
                 labelWeight: FontWeight.w600,
                 labelSize: Constant.MINIMUM_FONT_SIZE,
@@ -198,35 +242,26 @@ class _RegisterState extends State<Register>
                 ),
                 isDense: false,
                 noPadding: true,
-                inputController: _passwordController,
+                autoValidate: true,
+                inputController: _confirmPasswordController,
                 borderRadius: 0,
+                onValidate: (String confirmPasswordVal) {
+                  return SignUpUtils.isConfirmPasswordValid(
+                    context,
+                    _passwordController.text,
+                    confirmPasswordVal,
+                  );
+                },
+                errorColor: Colors.red,
+                errorMaxLines: 3,
+                onChange: (val) {
+                  checkCanRegister();
+                  print("5");
+                },
               ),
               Container(
                 height: Constant.MINIMUM_SPACING_XLG,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    height: Constant.INPUT_HEIGHT_BUTTON + 2,
-                    width: 100,
-                    child: RevisitButtonFullBordered(
-                      'Daftar',
-                      labelColor: Colors.white,
-                      labelSize: Constant.MINIMUM_FONT_SIZE,
-                      labelWeight: FontWeight.w600,
-                      borderRadius: Constant.MINIMUM_BORDER_RADIUS_LG,
-                      onClick: () {
-                        print('ditekan');
-                        onRegister();
-                      },
-                      btnBorderSide:
-                          BorderSide(width: 2, color: Constant.blue01),
-                      buttonColor: Constant.blue01,
-                    ),
-                  ),
-                ],
-              )
             ],
           ),
         ),
@@ -234,7 +269,7 @@ class _RegisterState extends State<Register>
     );
   }
 
-  void onRegister() async {
+  void _onRegister() async {
     HandlingServerLog a = await _authService.register(
       _nameController.text,
       _passwordController.text,
@@ -248,6 +283,48 @@ class _RegisterState extends State<Register>
     if (!a.success) {
       MainPlatform.showErrorSnackbar(context, 'Gagal mendaftarkan akun');
     }
+  }
+
+  Widget get _registerButton {
+    return RevisitButtonFull(
+      "Daftar",
+      buttonColor: Constant.blue01,
+      onClick: _canRegister ? _onRegister : null,
+      isLoading: _isLoading,
+      padding: Constant.MINIMUM_PADDING_BUTTON_MD,
+      labelSize: Constant.MINIMUM_FONT_SIZE - 2,
+    );
+  }
+
+  void checkCanRegister() {
+    print('asd');
+    var emailCheck =
+        SignUpUtils.emailRegexValidate(context, _emailController.text);
+    var confirmPasswordCheck = SignUpUtils.isConfirmPasswordValid(
+      context,
+      _passwordController.text,
+      _confirmPasswordController.text,
+    );
+    var passwordCheck =
+        SignUpUtils.passwordRegexValidate(context, _passwordController.text);
+
+    if (_nameController.text.isNotEmpty &&
+        _usernameController.text.isNotEmpty &&
+        emailCheck == null &&
+        passwordCheck == null &&
+        confirmPasswordCheck == null) {
+      setState(() {
+        _canRegister = true;
+      });
+      print("ini tru");
+      return;
+    }
+
+    setState(() {
+      _canRegister = false;
+    });
+    print("ini false");
+    return;
   }
 
   Widget get _appBar {

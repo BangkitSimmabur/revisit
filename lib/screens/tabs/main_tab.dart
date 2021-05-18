@@ -33,7 +33,6 @@ class _MainTabState extends State<MainTab>
   var _locatorModel = GetIt.I<NavigationService>();
   var _navigatorKey = GlobalKey<NavigatorState>();
   var _scaffoldKey = GlobalKey<ScaffoldState>();
-  TabController _tabController;
 
   int _currentIndex = 0;
   final List<String> _titleBars = [
@@ -63,7 +62,6 @@ class _MainTabState extends State<MainTab>
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -248,8 +246,8 @@ class _MainTabState extends State<MainTab>
 
   List<Widget> get _iconTabs {
     return [
-      Icon(Icons.search, color: Colors.white, size: Constant.HEIGHT_SM),
-      Icon(Icons.search, color: Colors.white, size: Constant.HEIGHT_SM),
+      null,
+      null,
       null,
     ];
   }

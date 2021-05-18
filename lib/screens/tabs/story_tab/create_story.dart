@@ -1,15 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:revisit/components/button_full.dart';
 import 'package:revisit/components/common_appbar.dart';
 import 'package:revisit/components/image_input_common.dart';
 import 'package:revisit/components/inputCommon.dart';
-import 'package:revisit/components/input_border.dart';
 import 'package:revisit/components/input_map.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/models/location.dart';
 import 'package:revisit/platform/platform_main.dart';
+import 'package:revisit/service/story_service.dart';
 
 class CreateStory extends StatefulWidget {
   @override
@@ -25,6 +26,7 @@ class _CreateStoryState extends State<CreateStory> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descController = TextEditingController();
 
+  StoryService _storyService;
   @override
   void dispose() {
     _titleController.dispose();
@@ -41,6 +43,8 @@ class _CreateStoryState extends State<CreateStory> {
 
   @override
   Widget build(BuildContext context) {
+    _storyService = Provider.of<StoryService>(context);
+
     return Scaffold(
       appBar: _appBar,
       body: _childElement,
@@ -84,7 +88,7 @@ class _CreateStoryState extends State<CreateStory> {
         Container(
           height: Constant.MINIMUM_SPACING_LG,
         ),
-        _inputProfile,
+        _photoIntput,
         Container(
           height: Constant.MINIMUM_SPACING_LG,
         ),
@@ -200,13 +204,64 @@ class _CreateStoryState extends State<CreateStory> {
     );
   }
 
-  void _onCreateStory() {}
+  void _onCreateStory() async {
+    if (_titleController.text.isEmpty || _titleController.text == null) {
+      MainPlatform.showFloatingSnackbar(
+        context,
+        'Judul cerita tidak diisi',
+        color: Constant.red01,
+      );
+      return;
+    }
 
-  Widget get _inputProfile {
+    if (_descController.text.isEmpty || _descController.text == null) {
+      MainPlatform.showFloatingSnackbar(
+        context,
+        'Isi cerita tidak diisi',
+        color: Constant.red01,
+      );
+      return;
+    }
+    if (location.address == null || location.address.isEmpty) {
+      MainPlatform.showFloatingSnackbar(
+        context,
+        'Lokasi cerita tidak diisi',
+        color: Constant.red01,
+      );
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+    MainPlatform.showLoadingAlert(context, 'Membuat cerita');
+    var serverLog = await _storyService.createStory(
+      title: _titleController.text,
+      action: ItemAction.create,
+      locationData: location,
+      photo: _imageFile,
+      text: _descController.text,
+    );
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (serverLog.success) {
+      MainPlatform.backTransitionPage(context);
+      MainPlatform.backTransitionPage(context);
+    }
+    if (!serverLog.success) {
+      MainPlatform.backTransitionPage(context);
+      MainPlatform.showErrorSnackbar(context, 'Gagal membuat cerita');
+    }
+  }
+
+  Widget get _photoIntput {
     return RevisitInputImageCommon(
       null,
       onSavedImage: (File img) {
-        _imageFile = img;
+        setState(() {
+          _imageFile = img;
+        });
       },
       isLoading: _isLoadingImg,
     );

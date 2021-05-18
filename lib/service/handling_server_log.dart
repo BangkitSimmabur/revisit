@@ -3,6 +3,8 @@ class HandlingServerLog {
   dynamic _data;
   String _message;
 
+  HandlingServerLog(this._success, this._data, this._message);
+
   bool get success => _success;
 
   dynamic get data => _data;

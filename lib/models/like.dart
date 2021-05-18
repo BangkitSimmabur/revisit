@@ -15,7 +15,7 @@ class Like {
     toJson: DateUtils.convertDateAndIsoString,
   )
   DateTime createdAt;
-  @JsonKey(name: '_userReport')
+  @JsonKey(name: '_userLike')
   String userId;
   Like(
       this.id,

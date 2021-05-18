@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:provider/provider.dart';
 import 'package:revisit/components/button_full.dart';
+import 'package:revisit/components/common_appbar.dart';
 import 'package:revisit/components/inputCommon.dart';
 import 'package:revisit/components/revisit_spinner.dart';
 import 'package:revisit/constant.dart';
@@ -21,9 +22,11 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 class RevisitInputMap extends StatefulWidget {
   RevisitInputMap({
     this.initLocationData,
+    this.isNew = true,
   });
 
   final LocationData initLocationData;
+  final bool isNew;
 
   @override
   _RevisitInputMapState createState() => _RevisitInputMapState();
@@ -32,7 +35,6 @@ class RevisitInputMap extends StatefulWidget {
 class _RevisitInputMapState extends State<RevisitInputMap> {
   final Completer<GoogleMapController> _controller = Completer();
   final TextEditingController _kotaController = TextEditingController();
-  final TextEditingController _posController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
   final TextEditingController _provinsiController = TextEditingController();
   final TextEditingController _fullAddressController = TextEditingController();
@@ -48,7 +50,6 @@ class _RevisitInputMapState extends State<RevisitInputMap> {
   LatLng _currentLatLng;
   String kota = '';
   String alamat = '';
-  String kodePos = '';
   String provinsi = '';
   GoogleMapController mapController;
   PanelController _pc = PanelController();
@@ -99,9 +100,7 @@ class _RevisitInputMapState extends State<RevisitInputMap> {
     _locationService = Provider.of<LocationService>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Input Lokasi'),
-      ),
+      appBar: _appBar,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -110,6 +109,7 @@ class _RevisitInputMapState extends State<RevisitInputMap> {
             minHeight: 180,
             controller: _pc,
             backdropTapClosesPanel: true,
+            panelSnapping: widget.isNew,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(25),
               topRight: Radius.circular(25),
@@ -163,7 +163,6 @@ class _RevisitInputMapState extends State<RevisitInputMap> {
   }
 
   Widget get _addressElement {
-
     if (_isLoading) return RevisitSpinner();
 
     return RevisitInputCommon(
@@ -194,8 +193,7 @@ class _RevisitInputMapState extends State<RevisitInputMap> {
   String _getAddress() {
     return "${alamat != null || alamat != '' ? '$alamat ' : ''}"
         "${provinsi != null || provinsi != '' ? '$provinsi ' : ''}"
-        "${kota != null || kota != '' ? '$kota ' : ''}"
-        "${kodePos != null || kodePos != '' ? '$kodePos ' : ''}";
+        "${kota != null || kota != '' ? '$kota ' : ''}";
   }
 
   Widget get mapElement {
@@ -249,7 +247,7 @@ class _RevisitInputMapState extends State<RevisitInputMap> {
           alignment: FractionalOffset.bottomRight,
           child: Padding(
             padding: EdgeInsets.only(
-              bottom: 240,
+              bottom: 300,
             ),
             child: _myLocationButton,
           ),
@@ -325,21 +323,6 @@ class _RevisitInputMapState extends State<RevisitInputMap> {
                         });
                       },
                       alamat == '' || alamat == null,
-                    ),
-                    Container(
-                      height: Constant.MINIMUM_SPACING,
-                    ),
-                    _textFormComponent(
-                      'Pos',
-                      false,
-                      _posController,
-                      (str) {
-                        setState(() {
-                          kodePos = str;
-                          _fullAddressController.text = _getAddress();
-                        });
-                      },
-                      kodePos == '' || kodePos == null,
                     ),
                     Container(
                       height: Constant.MINIMUM_SPACING,
@@ -544,13 +527,11 @@ class _RevisitInputMapState extends State<RevisitInputMap> {
       print('asd');
       print(a);
       setState(() {
-        kodePos = a.postalCode ?? '';
         kota = a.subAdministrativeArea ?? '';
         provinsi = a.administrativeArea ?? '';
         alamat = a.street ?? '';
         _alamatController.text = a.street ?? '';
         _provinsiController.text = a.administrativeArea ?? '';
-        _posController.text = a.postalCode ?? '';
         _kotaController.text = a.subAdministrativeArea ?? '';
         _fullAddressController.text = _getAddress();
       });
@@ -562,6 +543,19 @@ class _RevisitInputMapState extends State<RevisitInputMap> {
   }
 
   Future<void> _onSaveLocation() async {
+    if (widget.isNew) {
+      if (_alamatController.text.isEmpty ||
+          _kotaController.text.isEmpty ||
+          _provinsiController.text.isEmpty) {
+        return MainPlatform.showErrorSnackbar(context, 'Alamat belum lengkap');
+      }
+    }
+
+    if (!widget.isNew) {
+      if (_fullAddressController.text.isEmpty) {
+        return MainPlatform.showErrorSnackbar(context, 'Alamat belum lengkap');
+      }
+    }
     var isAccept = await MainPlatform.showConfirmationAlert(
       context,
       Text(
@@ -617,6 +611,14 @@ class _RevisitInputMapState extends State<RevisitInputMap> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget get _appBar {
+    return RevisitAppbar(
+      'Input Lokasi',
+      bgColor: Constant.blue01,
+      trailingColor: Colors.white,
     );
   }
 }

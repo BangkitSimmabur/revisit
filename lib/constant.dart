@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 enum ItemAction { create, update }
 
 class Constant{
+  static const double DEFAULT_VECTOR_SIZE = 180.0;
+
   //border
   static const double MINIMUM_BORDER_RADIUS = 8.0;
   static const double MINIMUM_BORDER_RADIUS_MD = 16.0;
@@ -56,8 +58,9 @@ class Constant{
   static final Color INACTIVE_TEXT = Color(0xffc2c2c2);
 
   // SPACING
-  static double MINIMUM_SPACING = Platform.isIOS ? 8.0 : 5.0;
-  static const double MINIMUM_SPACING_MD = 13.0;
+  static const double MINIMUM_SPACING = 8.0;
+  static const double MINIMUM_SPACING_SM = 13.0;
+  static const double MINIMUM_SPACING_MD = 18.0;
   static const double MINIMUM_SPACING_LG = 21.0;
   static const double MINIMUM_SPACING_XLG = 30.0;
 
@@ -131,8 +134,8 @@ class Constant{
     right: Constant.MINIMUM_PADDING_BUTTON,
   );
   static const EdgeInsets DEFAULT_PADDING_PAGE = EdgeInsets.symmetric(
-    horizontal: MINIMUM_SPACING_MD,
-    vertical: MINIMUM_SPACING_MD / 1.6,
+    horizontal: MINIMUM_SPACING_SM,
+    vertical: MINIMUM_SPACING_SM / 1.6,
   );
 
   static TextStyle inputCommon = TextStyle(color: Colors.grey, fontSize: Constant.MINIMUM_FONT_SIZE);

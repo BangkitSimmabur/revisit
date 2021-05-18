@@ -10,9 +10,9 @@ Comments _$CommentsFromJson(Map<String, dynamic> json) {
   return Comments(
     json['_id'] as String,
     commentFromJson(json['comments']),
-  )
-    ..articleId = json['_articleId'] as String
-    ..storyId = json['_storyId'] as String;
+    json['_storyId'] as String,
+    json['_articleId'] as String,
+  );
 }
 
 Map<String, dynamic> _$CommentsToJson(Comments instance) => <String, dynamic>{
@@ -25,13 +25,13 @@ Map<String, dynamic> _$CommentsToJson(Comments instance) => <String, dynamic>{
 Comment _$CommentFromJson(Map<String, dynamic> json) {
   return Comment(
     userFromJson(json['_user']),
-    DateUtils.convertDateAndIsoString(json['createdAt']),
+    json['createdAt'] as String,
     json['comment'] as String,
   );
 }
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
-      'createdAt': DateUtils.convertDateAndIsoString(instance.createdAt),
+      'createdAt': instance.createdAt,
       '_user': instance.user,
       'comment': instance.comment,
     };

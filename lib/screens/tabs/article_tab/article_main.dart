@@ -5,6 +5,7 @@ import 'package:revisit/components/revisit_spinner.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/platform/platform_main.dart';
 import 'package:revisit/screens/tabs/article_tab/article_Card.dart';
+import 'package:revisit/screens/tabs/article_tab/article_search_bar.dart';
 import 'package:revisit/screens/tabs/article_tab/create_artikel.dart';
 import 'package:revisit/service/article_service.dart';
 import 'package:revisit/service/auth_service.dart';
@@ -30,7 +31,6 @@ class ArticleMainState extends State<ArticleMain> {
   var canSearchProductScroll = true;
   var canSearchStoreScroll = true;
   var currentSumArticle = 0;
-  var currentSumSearchProducts = 0;
   var currentSumSearchStores = 0;
   var currentKeyword;
   var searchMode = false;
@@ -56,7 +56,7 @@ class ArticleMainState extends State<ArticleMain> {
   void initState() {
     Future.delayed(Duration.zero, initDataState);
 
-    // searchController.addListener(_onChangeSearch);
+    searchController.addListener(_onChangeSearch);
 
     super.initState();
   }
@@ -68,10 +68,7 @@ class ArticleMainState extends State<ArticleMain> {
 
     if (isMainLoading) setState(() => isLoading = true);
 
-    await articleService.getAllArticle(
-        currentPage,
-        true
-    );
+    await articleService.getAllArticle(currentPage, true);
 
     // if (storyService.currentKeyWord != null &&
     //     storyService.currentKeyWord.isNotEmpty) {
@@ -111,7 +108,7 @@ class ArticleMainState extends State<ArticleMain> {
     }
 
     setState(
-          () => currentSumArticle = articleService.articleExplore.length,
+      () => currentSumArticle = articleService.articleExplore.length,
     );
 
     print(canScroll);
@@ -167,6 +164,15 @@ class ArticleMainState extends State<ArticleMain> {
       child: ListView(
         controller: scrollController,
         children: [
+          Container(
+            height: Constant.MINIMUM_SPACING_MD,
+          ),
+          Container(
+            child: ArticleSearchBar(this),
+          ),
+          Container(
+            height: Constant.MINIMUM_SPACING_MD,
+          ),
           ArticleCard(this),
           isBottomLoading ? RevisitSpinner() : Container(),
         ],
@@ -179,16 +185,15 @@ class ArticleMainState extends State<ArticleMain> {
   }
 
   void _onRefresh() async {
-    // if (isShowSearch) {
-    //   return onSearch();
-    // }
+    if (isShowSearch) {
+      return onSearch();
+    }
 
     setState(() {
       currentPage = 1;
       // storeSearchPagination.resetPagination();
       // productSearchPagination.resetPagination();
       currentSumArticle = 0;
-      currentSumSearchProducts = 0;
       canScroll = true;
     });
 
@@ -203,65 +208,33 @@ class ArticleMainState extends State<ArticleMain> {
     setState(() {
       isBottomLoading = true;
     });
-    // if (isShowSearch) {
-    //   if (selectedTab == 'tab1') {
-    //     setState(() => productSearchPagination.doIncrement());
-    //     if (!canSearchProductScroll) {
-    //       return refreshController.loadNoData();
-    //     }
-    //
-    //     await menuItemService.searchGetAllProduct(
-    //       keyword: searchController.text,
-    //       catIds: storeService.storeCategories,
-    //       tag: storeService.selectedTag,
-    //       byLocation: storeService.searchByLocation,
-    //       pagination: productSearchPagination,
-    //     );
-    //
-    //     if (currentSumSearchProducts >=
-    //         menuItemService.productSearchResult.length) {
-    //       setState(() => canSearchProductScroll = false);
-    //     }
-    //
-    //     setState(
-    //           () => currentSumSearchProducts =
-    //           menuItemService.productSearchResult.length,
-    //     );
-    //
-    //     if (canSearchProductScroll) {
-    //       return refreshController.loadComplete();
-    //     }
-    //
-    //     return refreshController.loadNoData();
-    //   }
-    //
-    //   setState(() => storeSearchPagination.doIncrement());
-    //   if (!canSearchStoreScroll) {
-    //     return refreshController.loadNoData();
-    //   }
-    //
-    //   await storeService.searchGetAllStore(
-    //     keyword: searchController.text,
-    //     catIds: storeService.storeCategories,
-    //     tag: storeService.selectedTag,
-    //     byLocation: storeService.searchByLocation,
-    //     pagination: storeSearchPagination,
-    //   );
-    //
-    //   if (currentSumSearchStores >= storeService.storeSearchResult.length) {
-    //     setState(() => canSearchStoreScroll = false);
-    //   }
-    //
-    //   setState(
-    //         () => currentSumSearchStores = storeService.storeSearchResult.length,
-    //   );
-    //
-    //   if (canSearchStoreScroll) {
-    //     return refreshController.loadComplete();
-    //   }
-    //
-    //   return refreshController.loadNoData();
-    // }
+    if (isShowSearch) {
+      setState(() => currentSearchPage++);
+      if (!canSearchStoreScroll) {
+        return refreshController.loadNoData();
+      }
+
+      await articleService.getSearchArticle(
+        keyWord: searchController.text,
+        page: currentSearchPage,
+        isNew: false,
+      );
+
+      if (currentSumSearchStores >= articleService.articleSearchResult.length) {
+        setState(() => canSearchStoreScroll = false);
+      }
+
+      setState(
+        () =>
+            currentSumSearchStores = articleService.articleSearchResult.length,
+      );
+
+      if (canSearchStoreScroll) {
+        return refreshController.loadComplete();
+      }
+
+      return refreshController.loadNoData();
+    }
 
     setState(() => currentPage++);
     if (!canScroll) {
@@ -278,7 +251,7 @@ class ArticleMainState extends State<ArticleMain> {
     }
 
     setState(
-          () => currentSumArticle = articleService.articleExplore.length,
+      () => currentSumArticle = articleService.articleExplore.length,
     );
 
     setState(() {
@@ -292,4 +265,56 @@ class ArticleMainState extends State<ArticleMain> {
     return refreshController.loadNoData();
   }
 
+  Future<void> _onChangeSearch() async {
+    if ((searchController.text == null ||
+        searchController.text == '' ||
+        searchController.text.isEmpty)) {
+      return setState(() {
+        searchMode = false;
+        isShowSearch = false;
+        articleService.currentKeyWord = null;
+      });
+    }
+
+    if (searchController.text != null || searchController.text.isNotEmpty)
+      setState(() {
+        searchMode = true;
+        articleService.currentKeyWord = searchController.text;
+      });
+
+    if ((searchController.text != null || searchController.text.isNotEmpty) &&
+        (articleService.articleSearchResult.isNotEmpty)) {
+      return setState(() {
+        searchMode = true;
+        isShowSearch = true;
+        articleService.currentKeyWord = searchController.text;
+      });
+    }
+  }
+
+  Future<void> onSearch() async {
+    setState(() {
+      searchMode = true;
+      isLoading = true;
+      currentSearchPage = 1;
+      canSearchStoreScroll = true;
+      canSearchProductScroll = true;
+      articleService.currentKeyWord = searchController.text;
+    });
+
+    await articleService.getSearchArticle(
+      keyWord: searchController.text,
+      page: currentSearchPage,
+      isNew: true,
+    );
+
+    return setState(() {
+      searchMode = true;
+      isLoading = false;
+      isShowSearch = true;
+      refreshController.refreshCompleted(
+        resetFooterState: true,
+      );
+    });
+  }
 }

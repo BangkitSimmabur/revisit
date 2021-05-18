@@ -10,12 +10,12 @@ Like _$LikeFromJson(Map<String, dynamic> json) {
   return Like(
     json['_id'] as String,
     DateUtils.convertDateAndIsoString(json['createdAt']),
-    json['_userReport'] as String,
+    json['_userLike'] as String,
   );
 }
 
 Map<String, dynamic> _$LikeToJson(Like instance) => <String, dynamic>{
       '_id': instance.id,
       'createdAt': DateUtils.convertDateAndIsoString(instance.createdAt),
-      '_userReport': instance.userId,
+      '_userLike': instance.userId,
     };

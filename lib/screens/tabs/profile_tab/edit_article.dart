@@ -7,21 +7,27 @@ import 'package:revisit/components/common_appbar.dart';
 import 'package:revisit/components/image_input_common.dart';
 import 'package:revisit/components/inputCommon.dart';
 import 'package:revisit/components/input_map.dart';
+import 'package:revisit/components/revisit_spinner.dart';
 import 'package:revisit/constant.dart';
 import 'package:revisit/models/location.dart';
 import 'package:revisit/platform/platform_main.dart';
 import 'package:revisit/service/article_service.dart';
 
-class CreateArticle extends StatefulWidget {
+class EditArticle extends StatefulWidget {
+  final String id;
+
+  EditArticle({this.id});
   @override
-  _CreateArticleState createState() => _CreateArticleState();
+  _EditArticleState createState() => _EditArticleState();
 }
 
-class _CreateArticleState extends State<CreateArticle> {
+class _EditArticleState extends State<EditArticle> {
   File _imageFile;
+  String _imgSrc;
   bool _isLoading = false;
   bool _isLoadingImg = false;
-  LocationData location;
+  LocationData location = new LocationData(null, null, "");
+  bool canUpdate = false;
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descController = TextEditingController();
@@ -36,9 +42,27 @@ class _CreateArticleState extends State<CreateArticle> {
 
   @override
   void initState() {
-    location = new LocationData(null, null, "");
+    Future.delayed(Duration.zero, initDataState);
 
     super.initState();
+  }
+
+  Future initDataState() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    await _articleService.getArticleById(widget.id);
+    setState(() {
+      _titleController.text = _articleService.currentArticleV2.title;
+      _descController.text = _articleService.currentArticleV2.text;
+      location = _articleService.currentArticleV2.location;
+      _imgSrc = _articleService.currentArticleV2.picture.fullImage;
+    });
+    setState(() {
+      _isLoading = false;
+    });
+    return;
   }
 
   @override
@@ -52,6 +76,10 @@ class _CreateArticleState extends State<CreateArticle> {
   }
 
   Widget get _childElement {
+    if (_isLoading) {
+      return RevisitSpinner();
+    }
+
     return Stack(
       children: [
         Column(
@@ -84,11 +112,14 @@ class _CreateArticleState extends State<CreateArticle> {
           inputController: _titleController,
           noLabel: true,
           labelColor: Colors.black,
+          onChange: (val) {
+            _onCheckCanUpdate();
+          },
         ),
         Container(
           height: Constant.MINIMUM_SPACING_LG,
         ),
-        _photoIntput,
+        _photoInput,
         Container(
           height: Constant.MINIMUM_SPACING_LG,
         ),
@@ -105,6 +136,9 @@ class _CreateArticleState extends State<CreateArticle> {
           inputController: _descController,
           noLabel: true,
           labelColor: Colors.black,
+          onChange: (val) {
+            _onCheckCanUpdate();
+          },
         ),
       ],
     );
@@ -183,28 +217,28 @@ class _CreateArticleState extends State<CreateArticle> {
       context,
       RevisitInputMap(
         initLocationData: location,
+        isNew: false,
       ),
     );
-
-    print(data);
 
     if (data == null) return;
 
     setState(() => location = data);
+    _onCheckCanUpdate();
   }
 
   Widget get _createStoreBtn {
     return RevisitButtonFull(
-      "BUAT ARTIKEL",
+      "SUNTING ARTIKEL",
       buttonColor: Constant.blue01,
-      onClick: _onCreateArticle,
+      onClick: canUpdate ? _onUpdateArticle : null,
       isLoading: _isLoading,
       padding: Constant.MINIMUM_PADDING_BUTTON_MD,
       labelSize: Constant.MINIMUM_FONT_SIZE - 2,
     );
   }
 
-  void _onCreateArticle() async {
+  void _onUpdateArticle() async {
     if (_titleController.text.isEmpty || _titleController.text == null) {
       MainPlatform.showFloatingSnackbar(
         context,
@@ -233,44 +267,56 @@ class _CreateArticleState extends State<CreateArticle> {
     setState(() {
       _isLoading = true;
     });
-    MainPlatform.showLoadingAlert(context, 'Membuat artikel');
-    var serverLog = await _articleService.createArticle(
+    MainPlatform.showLoadingAlert(context, 'Menyunting artikel');
+    await _articleService.updateArticle(
+      id: _articleService.currentArticleV2.id,
+      context: context,
       title: _titleController.text,
-      action: ItemAction.create,
       locationData: location,
       photo: _imageFile,
       text: _descController.text,
     );
-    setState(() {
-      _isLoading = false;
-    });
-
-    if(serverLog.success) {
-      MainPlatform.backTransitionPage(context);
-      MainPlatform.backTransitionPage(context);
-    }
-    if(!serverLog.success) {
-      MainPlatform.backTransitionPage(context);
-      MainPlatform.showErrorSnackbar(context, 'Gagal membuat artikel');
-    }
   }
 
-  Widget get _photoIntput {
+  Widget get _photoInput {
     return RevisitInputImageCommon(
-      null,
+      _imgSrc,
       onSavedImage: (File img) {
         setState(() {
           _imageFile = img;
-        });      },
+        });
+        _onCheckCanUpdate();
+      },
       isLoading: _isLoadingImg,
     );
   }
 
   Widget get _appBar {
     return RevisitAppbar(
-      'Buat Artikel',
+      'Sunting Artikel',
       bgColor: Constant.blue01,
       trailingColor: Colors.white,
     );
+  }
+
+  Future<void> _onCheckCanUpdate() async {
+    if (_imageFile != null ||
+        location != _articleService.currentArticleV2.location ||
+        _titleController.text != _articleService.currentArticleV2.title ||
+        _descController.text != _articleService.currentArticleV2.text) {
+      setState(() {
+        canUpdate = true;
+      });
+      return;
+    }
+
+    if (_imageFile == null &&
+        location == _articleService.currentArticleV2.location &&
+        _titleController.text == _articleService.currentArticleV2.title &&
+        _descController.text == _articleService.currentArticleV2.text) {
+      setState(() {
+        canUpdate = false;
+      });
+    }
   }
 }

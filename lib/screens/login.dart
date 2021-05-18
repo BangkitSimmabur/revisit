@@ -221,7 +221,7 @@ class _LoginState extends State<Login> {
             ],
           ),
           Container(
-            height: Constant.MINIMUM_SPACING_MD,
+            height: Constant.MINIMUM_SPACING_SM,
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -236,6 +236,8 @@ class _LoginState extends State<Login> {
   }
 
   void _onLogin() async {
+    MainPlatform.showLoadingAlert(context, 'Menunggu konfirmasi akun');
+
     HandlingServerLog serverLog = await _authService.login(
       _emailController.text,
       _passwordController.text,
@@ -244,6 +246,7 @@ class _LoginState extends State<Login> {
     if (serverLog.success == true) {
       MainPlatform.transitionToPage(context, MainTab(), newPage: true);
     } else {
+      MainPlatform.backTransitionPage(context);
       MainPlatform.showErrorSnackbar(context, "Gagal login");
     }
   }

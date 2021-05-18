@@ -255,20 +255,14 @@ class MainPlatform {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return Platform.isIOS
-                ? CupertinoAlertDialog(
-              title: CupertinoActivityIndicator(),
-              content: Text(
-                textInfo,
-              ),
-            )
-                : AlertDialog(
+            return  AlertDialog(
               title: SpinKitFadingCircle(
                 color: Constant.BLUE02,
                 size: Constant.BUTTON_WIDTH,
               ),
               content: Text(
                 textInfo,
+                textAlign: TextAlign.center,
               ),
             );
           });
@@ -355,7 +349,7 @@ class MainPlatform {
                 fontFamily: CupertinoIcons.iconFont,
                 fontPackage: CupertinoIcons.iconFontPackage)),
             Container(
-              width: Constant.MINIMUM_SPACING_MD,
+              width: Constant.MINIMUM_SPACING_SM,
             ),
             Text(
               "Kamera",
@@ -374,7 +368,7 @@ class MainPlatform {
                 fontFamily: CupertinoIcons.iconFont,
                 fontPackage: CupertinoIcons.iconFontPackage)),
             Container(
-              width: Constant.MINIMUM_SPACING_MD,
+              width: Constant.MINIMUM_SPACING_SM,
             ),
             Text(
               'Galeri',
@@ -464,7 +458,7 @@ class MainPlatform {
         Color color,
         FlushbarPosition position = FlushbarPosition.BOTTOM,
         IconData iconData = Icons.info,
-        mainText = 'placeholder_btn_close',
+        mainText = 'tutup',
         Function(Flushbar<Object>) onTap,
       }) {
     if (context == null) return null;
