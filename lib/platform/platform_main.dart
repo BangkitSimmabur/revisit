@@ -345,7 +345,7 @@ class MainPlatform {
       CupertinoActionSheetAction cameraActionSheet = CupertinoActionSheetAction(
         child: Row(
           children: <Widget>[
-            Icon(IconData(0xF2D3,
+            const Icon(IconData(0xF2D3,
                 fontFamily: CupertinoIcons.iconFont,
                 fontPackage: CupertinoIcons.iconFontPackage)),
             Container(
@@ -364,7 +364,7 @@ class MainPlatform {
       CupertinoActionSheetAction(
         child: Row(
           children: <Widget>[
-            Icon(IconData(0xF2E4,
+            const Icon(IconData(0xF2E4,
                 fontFamily: CupertinoIcons.iconFont,
                 fontPackage: CupertinoIcons.iconFontPackage)),
             Container(

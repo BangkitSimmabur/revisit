@@ -79,35 +79,10 @@ class _MainTabState extends State<MainTab>
                 FontAwesomeIcons.newspaper,
                 color: Constant.GRAY01,
               ),
-        //     ? Image.asset(
-        //   'assets/icons/home_selected.png',
-        //   height: 23,
-        //   width: 23,
-        // )
-        //     : Image.asset(
-        //   'assets/icons/home.png',
-        //   height: 23,
-        //   width: 23,
-        // ),
         label: "Artikel",
       ),
       BottomNavigationBarItem(
           icon: _currentIndex == 1
-              //     ? Image.asset(
-              //         'assets/icons/orders_selected.png',
-              //         height: 23,
-              //         width: 23,
-              //       )
-              //     : Image.asset(
-              //         'assets/icons/orders.png',
-              //         height: 23,
-              //         width: 23,
-              //       ),
-              // title: TruWorldTextIntl(
-              //   "tab_orders_bottom",
-              //   isIntl: true,
-              //   style: Styles.titleBarStyle,
-              // ),
               ? Icon(
                   FontAwesomeIcons.paperPlane,
                   color: Constant.blue01,
@@ -119,21 +94,6 @@ class _MainTabState extends State<MainTab>
           label: "Cerita"),
       BottomNavigationBarItem(
         icon: _currentIndex == 2
-            //     ? Image.asset(
-            //         'assets/icons/map_view_selected.png',
-            //         height: 23,
-            //         width: 23,
-            //       )
-            //     : Image.asset(
-            //         'assets/icons/map_view.png',
-            //         height: 23,
-            //         width: 23,
-            //       ),
-            // title: TruWorldTextIntl(
-            //   "tab_map",
-            //   isIntl: true,
-            //   style: Styles.titleBarStyle,
-            // ),
             ? Icon(
                 FontAwesomeIcons.user,
                 color: Constant.blue01,
